@@ -3,793 +3,1739 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pro StickerGen - Aplikasi Cetak Stiker Profesional</title>
-
+    <title>Pro StickerGen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Bebas+Neue&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff, #e6e9ff);
+        :root {
+            --brand: #4F46E5;
+            --brand-light: #EEF2FF;
+            --brand-mid: #818CF8;
+            --surface: #FFFFFF;
+            --surface-2: #F8FAFC;
+            --border: #E2E8F0;
+            --text-main: #0F172A;
+            --text-sub: #64748B;
+            --radius: 14px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(15,23,42,0.08);
+            --shadow-lg: 0 12px 32px rgba(79,70,229,0.12);
         }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(145deg, #EEF2FF 0%, #F0F9FF 50%, #F5F3FF 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
 
-        .template1 { background: linear-gradient(135deg, #fdbb2d, #b21f1f); }
-        .template2 { background: linear-gradient(135deg, #1a2a6c, #4a8fe7); }
-        .template3 { background: linear-gradient(135deg, #8E2DE2, #4A00E0); }
-        .template4 { background: linear-gradient(135deg, #00b09b, #96c93d); }
-        .template5 { background: linear-gradient(135deg, #f46b45, #eea849); }
-        .template6 { background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); }
+        /* ── Templates ── */
+        .tmpl-gold    { background: linear-gradient(135deg, #F59E0B, #DC2626); }
+        .tmpl-ocean   { background: linear-gradient(135deg, #0EA5E9, #3B82F6); }
+        .tmpl-purple  { background: linear-gradient(135deg, #7C3AED, #4338CA); }
+        .tmpl-emerald { background: linear-gradient(135deg, #10B981, #059669); }
+        .tmpl-sunset  { background: linear-gradient(135deg, #F97316, #EAB308); }
+        .tmpl-rose    { background: linear-gradient(135deg, #EC4899, #8B5CF6); }
+        .tmpl-slate   { background: linear-gradient(135deg, #475569, #1E293B); }
+        .tmpl-teal    { background: linear-gradient(135deg, #14B8A6, #0891B2); }
 
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--brand);
+            border-radius: 99px;
+        }
+
+        /* ── Inputs ── */
+        .field-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .field-input {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 12px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: var(--text-main);
+            transition: border-color 0.15s, box-shadow 0.15s;
+            outline: none;
+        }
+        .field-input:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 16px;
+            border-radius: 9px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(79,70,229,0.3);
+        }
+        .btn-primary:hover { background: #4338CA; box-shadow: 0 4px 12px rgba(79,70,229,0.4); transform: translateY(-1px); }
+        .btn-secondary { background: var(--surface-2); color: var(--text-sub); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); color: var(--text-main); }
+        .btn-danger { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+        .btn-danger:hover { background: #FEE2E2; }
+        .btn-purple { background: #F5F3FF; color: #7C3AED; border: 1px solid #DDD6FE; }
+        .btn-purple:hover { background: #EDE9FE; }
+        .btn-print {
+            background: linear-gradient(135deg, var(--brand), #7C3AED);
+            color: #fff;
+            width: 100%;
+            justify-content: center;
+            padding: 13px;
+            font-size: 0.9375rem;
+            border-radius: 11px;
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-print:hover { opacity: 0.93; transform: translateY(-1px); }
+
+        /* ── Template picker ── */
+        .tmpl-dot {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+            flex-shrink: 0;
+        }
+        .tmpl-dot:hover { transform: scale(1.1); }
+        .tmpl-dot.active { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(79,70,229,0.25); transform: scale(1.1); }
+        .tmpl-dot.tmpl-custom { position: relative; }
+        .tmpl-dot.tmpl-custom::after {
+            content: '\f53f';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+        }
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 8px 10px;
+        }
+        .color-picker-row input[type="color"] {
+            width: 36px;
+            height: 36px;
+            padding: 2px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .custom-gradient-preview {
+            height: 10px;
+            border-radius: 99px;
+            margin-top: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* ── Font slider ── */
+        .slider-group {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            margin-bottom: 8px;
+        }
+        .slider-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        input[type="range"] {
+            flex: 1;
+            height: 4px;
+            border-radius: 99px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+        .slider-val {
+            min-width: 42px;
+            text-align: right;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+        .bold-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .font-preview-box {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 12px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+        .font-preview-box span { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-sub); margin-top: 4px; }
+
+        /* ── Upload area ── */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            background: var(--surface-2);
+        }
+        .upload-zone:hover { border-color: var(--brand-mid); background: var(--brand-light); }
+        .upload-zone input[type="file"] { display: none; }
+        .upload-zone.compact { padding: 10px 8px; min-height: 88px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .upload-zone.compact i { font-size: 1rem !important; margin-bottom: 4px !important; }
+        .upload-zone.compact p { font-size: 0.65rem !important; line-height: 1.25; }
+        .image-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .option-check-box {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 10px 8px;
+            min-height: 88px;
+            background: var(--surface-2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .option-check-box:hover { border-color: var(--brand-mid); background: var(--brand-light); }
+        .option-check-box input[type="checkbox"] { margin-bottom: 6px; }
+        .image-preview-compact {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+        }
+
+        /* ── Logo preview ── */
+        .logo-preview-wrap {
+            position: relative;
+            display: inline-block;
+        }
+        .logo-preview-img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+        }
+        .logo-clear-btn {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 18px;
+            height: 18px;
+            border-radius: 99px;
+            background: #DC2626;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+        }
+
+        /* ── Sticker ── */
         .sticker {
             color: white;
             background-size: cover;
             background-position: center;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
         }
-        .sticker:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-        .sticker-content { background: rgba(0, 0, 0, 0.5); transition: background 0.3s ease; }
-        .sticker:hover .sticker-content { background: rgba(0, 0, 0, 0.6); }
+        .sticker:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.18); }
         .sticker.round { border-radius: 50%; }
+        .sticker-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.48);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            gap: 2px;
+        }
+        .sticker.round .sticker-overlay { border-radius: 50%; }
+        .sticker.round.image-only .sticker-overlay {
+            background: transparent;
+            padding: 0;
+        }
+        .sticker-round-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+        .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap {
+            width: 42%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.18);
+        }
+        .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .sticker-logo-wrap {
+            width: 28%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+        .sticker-logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        .sticker .s-title {
+            text-align: center;
+            line-height: 1.15;
+            word-break: break-word;
+            width: 100%;
+        }
+        .sticker .s-name {
+            text-align: center;
+            line-height: 1.2;
+            word-break: break-word;
+            width: 100%;
+        }
+        .sticker .s-comp {
+            text-align: center;
+            line-height: 1.2;
+            word-break: break-word;
+            width: 100%;
+            opacity: 0.9;
+        }
+        .sticker .s-inst {
+            text-align: center;
+            line-height: 1.15;
+            word-break: break-word;
+            width: 100%;
+            opacity: 0.75;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            padding-top: 4px;
+            margin-top: 2px;
+        }
 
+        /* ── Table ── */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+        .data-table th {
+            background: var(--surface-2);
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-sub);
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: var(--surface-2); }
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--brand-light);
+            color: var(--brand);
+        }
+
+        /* ── Modal ── */
+        .modal-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            background: var(--surface);
+            border-radius: 18px;
+            padding: 28px;
+            width: min(420px, calc(100vw - 32px));
+            box-shadow: 0 24px 60px rgba(15,23,42,0.2);
+            transform: scale(0.95);
+            transition: transform 0.2s;
+        }
+        .modal-backdrop.open .modal-box { transform: scale(1); }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            transform: translateY(12px);
+            opacity: 0;
+            transition: transform 0.25s, opacity 0.25s;
+            max-width: calc(100vw - 32px);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .toast.error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* ── Preview area ── */
+        #stickerPreviewWrap {
+            background: #F1F5F9;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 220px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+        }
+
+        /* ── Info badge ── */
+        .info-badge {
+            background: var(--brand-light);
+            color: var(--brand);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            line-height: 1.4;
+        }
+
+        /* ── Print styles ── */
         @media print {
             body > *:not(.print-container) { display: none !important; }
-            .print-container { display: block !important; width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; background: white !important; }
-            /* min-height accounts for 3mm top + 3mm bottom padding (total 6mm) */
-            .print-page { display: block !important; width: 100% !important; min-height: 291mm !important; position: relative !important; page-break-inside: avoid !important; margin-bottom: 0 !important; padding: 3mm !important; box-sizing: border-box !important; page-break-after: always !important; }
+            .print-container {
+                display: block !important;
+                width: 100% !important;
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .print-page {
+                display: block !important;
+                width: 100% !important;
+                min-height: 291mm !important;
+                page-break-inside: avoid !important;
+                page-break-after: always !important;
+                padding: 3mm !important;
+                box-sizing: border-box !important;
+            }
             .print-page:last-child { page-break-after: auto !important; }
-            .sticker-print-area { display: flex !important; flex-wrap: wrap !important; gap: 2mm !important; width: 100% !important; height: 100% !important; align-content: flex-start !important; justify-content: flex-start !important; }
-            .sticker { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; border: 1px dashed #ccc !important; break-inside: avoid !important; page-break-inside: avoid !important; width: var(--sticker-width) !important; height: var(--sticker-height) !important; border-radius: var(--sticker-border-radius) !important; aspect-ratio: auto !important; margin: 0 !important; padding: 0 !important; flex-shrink: 0 !important; }
-            .sticker-content { background: rgba(0, 0, 0, 0.6) !important; border-radius: inherit !important; width: 100% !important; height: 100% !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; padding: 2mm !important; box-sizing: border-box !important; }
-            .sticker .title, .sticker .participant, .sticker .competition, .sticker .instansi { color: var(--sticker-text-color, #ffffff) !important; text-align: center !important; word-wrap: break-word !important; line-height: 1.1 !important; }
-            .sticker .title { font-size: var(--title-font-size) !important; font-weight: var(--title-font-weight) !important; }
-            .sticker .participant { font-size: var(--participant-font-size) !important; font-weight: var(--participant-font-weight) !important; }
-            .sticker .competition { font-size: var(--competition-font-size) !important; font-weight: var(--competition-font-weight) !important; }
-            .sticker .instansi { font-size: var(--instansi-font-size) !important; font-weight: var(--instansi-font-weight) !important; }
+            .sticker-print-area {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 2mm !important;
+                width: 100% !important;
+                align-content: flex-start !important;
+            }
+            .sticker {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-shadow: none !important;
+                border: 1px dashed #ccc !important;
+                break-inside: avoid !important;
+                width: var(--sticker-width) !important;
+                height: var(--sticker-height) !important;
+                border-radius: var(--sticker-border-radius) !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                flex-shrink: 0 !important;
+                overflow: hidden !important;
+            }
+            .sticker-overlay {
+                position: absolute !important;
+                inset: 0 !important;
+                background: rgba(0,0,0,0.52) !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 2.5mm !important;
+                box-sizing: border-box !important;
+            }
+            .sticker-logo-wrap {
+                width: 26% !important;
+                aspect-ratio: 1 !important;
+                border-radius: 50% !important;
+                background: rgba(255,255,255,0.18) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 3px !important;
+                margin-bottom: 2mm !important;
+            }
+            .sticker-logo-wrap img { width: 100% !important; height: 100% !important; object-fit: contain !important; border-radius: 50% !important; }
+            .sticker.round.image-only .sticker-overlay { background: transparent !important; padding: 0 !important; }
+            .sticker-round-img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 50% !important; display: block !important; }
+            .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap {
+                width: 42% !important; aspect-ratio: 1 !important; border-radius: 50% !important;
+                overflow: hidden !important; margin-bottom: 2mm !important; flex-shrink: 0 !important;
+                background: rgba(255,255,255,0.18) !important;
+            }
+            .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap img {
+                width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 50% !important;
+            }
+            .sticker .s-title { font-family: var(--sticker-font-family) !important; font-size: var(--title-font-size) !important; font-weight: var(--title-font-weight) !important; color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.15 !important; }
+            .sticker .s-name  { font-family: var(--sticker-font-family) !important; font-size: var(--name-font-size) !important;  font-weight: var(--name-font-weight) !important;  color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.2 !important; }
+            .sticker .s-comp  { font-family: var(--sticker-font-family) !important; font-size: var(--comp-font-size) !important;  font-weight: var(--comp-font-weight) !important;  color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.2 !important; opacity: 0.9; }
+            .sticker .s-inst  { font-family: var(--sticker-font-family) !important; font-size: var(--inst-font-size) !important;  font-weight: var(--inst-font-weight) !important;  color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.15 !important; border-top: 1px solid rgba(255,255,255,0.3) !important; padding-top: 2px !important; margin-top: 1mm !important; opacity: 0.75; }
             @page { size: A4; margin: 0; }
-            html, body { margin: 0 !important; padding: 0 !important; height: auto !important; overflow: visible !important; }
+            html, body { margin: 0 !important; padding: 0 !important; }
         }
 
-        .card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .toast { bottom: 16px; right: 16px; left: 16px; max-width: none; }
+            .modal-box { padding: 20px; }
+        }
 
-        .font-control-group { background: #f9fafb; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-        .font-control-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 500; color: #4b5563; }
-        .font-controls { display: flex; gap: 10px; align-items: center; }
-        .font-slider { flex-grow: 1; }
-        .font-size-value { min-width: 40px; text-align: center; font-weight: 600; color: #374151; }
-
-        .spinner { width: 40px; height: 40px; border: 4px solid rgba(0, 0, 0, 0.1); border-left-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Tab system */
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            font-family: inherit;
+        }
+        .tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
     </style>
 </head>
-<body class="min-h-screen py-8">
-    <div id="app" class="container mx-auto px-4">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 flex items-center justify-center gap-3">
-                <i class="fas fa-award text-blue-600"></i>
-                <span>Pro StickerGen</span>
-            </h1>
-            <p class="text-gray-600 mt-3 max-w-2xl mx-auto">Buat dan cetak stiker penghargaan profesional dengan mudah dan cepat. Modern, responsif, dan kaya fitur.</p>
+<body>
+    <div id="app" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 sm:py-10">
+
+        <!-- Header -->
+        <header class="text-center mb-8 sm:mb-12">
+            <div class="inline-flex items-center gap-2 bg-white border border-indigo-100 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest text-indigo-500 uppercase mb-4 shadow-sm">
+                <i class="fas fa-certificate"></i> Pro StickerGen
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Buat & Cetak Stiker Penghargaan</h1>
+            <p class="text-slate-500 mt-2 text-sm sm:text-base max-w-lg mx-auto">Desain profesional dengan logo, template, dan kontrol penuh ukuran cetak A4.</p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                <div class="card p-6">
-                    <h2 class="text-xl font-bold text-gray-700 flex items-center gap-3 mb-4">
-                        <i class="fas fa-cogs text-blue-500"></i>
-                        <span>Pengaturan Umum</span>
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="titleInput" class="block text-sm font-medium text-gray-600 mb-1">Judul Stiker</label>
-                            <input type="text" id="titleInput" value="PERINGKAT" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-blue-500 focus:border-blue-500" />
+        <!-- Layout grid: left wide, right sidebar -->
+        <div class="grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-6">
+
+            <!-- LEFT COLUMN -->
+            <div class="space-y-5">
+
+                <!-- Tab navigation (mobile-friendly) -->
+                <div class="card overflow-hidden">
+                    <div class="flex border-b border-slate-100 px-4">
+                        <button class="tab-btn active" data-tab="general"><i class="fas fa-cog mr-1.5"></i>Umum</button>
+                        <button class="tab-btn" data-tab="design"><i class="fas fa-palette mr-1.5"></i>Desain</button>
+                        <button class="tab-btn" data-tab="font"><i class="fas fa-text-height mr-1.5"></i>Font</button>
+                    </div>
+
+                    <!-- Tab: General -->
+                    <div class="tab-panel active p-5" id="tab-general">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="field-label">Judul Stiker</label>
+                                <input type="text" id="titleInput" value="PERINGKAT" class="field-input" />
+                            </div>
+                            <div>
+                                <label class="field-label">Nama Instansi</label>
+                                <input type="text" id="instansiInput" value="SDN Harapan Bangsa" class="field-input" />
+                            </div>
                         </div>
-                        <div>
-                            <label for="instansiInput" class="block text-sm font-medium text-gray-600 mb-1">Nama Instansi</label>
-                            <input type="text" id="instansiInput" value="SDN Harapan Bangsa" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+
+                    <!-- Tab: Design -->
+                    <div class="tab-panel p-5" id="tab-design">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Left: template + color -->
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="section-title">Template Warna</p>
+                                    <div id="templatePreviews" class="flex flex-wrap gap-2"></div>
+                                    <div id="customTemplateSection" class="mt-3">
+                                        <label class="field-label">Template Custom</label>
+                                        <div class="image-options-grid">
+                                            <div class="color-picker-row">
+                                                <input type="color" id="customColor1" value="#4F46E5" title="Warna awal" />
+                                                <div class="min-w-0">
+                                                    <p class="text-xs font-semibold text-slate-700">Warna Awal</p>
+                                                    <p class="text-[0.65rem] text-slate-400" id="customColor1Val">#4F46E5</p>
+                                                </div>
+                                            </div>
+                                            <div class="color-picker-row">
+                                                <input type="color" id="customColor2" value="#7C3AED" title="Warna akhir" />
+                                                <div class="min-w-0">
+                                                    <p class="text-xs font-semibold text-slate-700">Warna Akhir</p>
+                                                    <p class="text-[0.65rem] text-slate-400" id="customColor2Val">#7C3AED</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="customGradientPreview" class="custom-gradient-preview"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Warna Teks</label>
+                                    <div class="flex items-center gap-3">
+                                        <input type="color" id="textColor" value="#ffffff" class="w-10 h-10 p-1 rounded-lg border border-slate-200 cursor-pointer bg-white" />
+                                        <span class="text-xs text-slate-500">Pilih warna teks stiker</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right: logo + background -->
+                            <div class="space-y-3">
+                                <p class="section-title">Gambar & Logo</p>
+                                <div id="logoPreviewArea" class="hidden image-preview-compact">
+                                    <div class="logo-preview-wrap">
+                                        <img id="logoPreviewImg" src="" alt="Logo" class="logo-preview-img" />
+                                        <button id="clearLogoBtn" class="logo-clear-btn"><i class="fas fa-times"></i></button>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-semibold text-slate-700">Logo aktif</p>
+                                        <p class="text-xs text-slate-400">Tampil di tengah stiker</p>
+                                    </div>
+                                </div>
+                                <div class="image-options-grid">
+                                    <label class="upload-zone compact" for="logoFile">
+                                        <i class="fas fa-image text-indigo-300"></i>
+                                        <p class="font-semibold text-slate-600">Upload Logo</p>
+                                        <p class="text-slate-400">PNG transparan</p>
+                                        <input type="file" id="logoFile" accept="image/*" />
+                                    </label>
+                                    <label class="upload-zone compact" for="backgroundFile">
+                                        <i class="fas fa-photo-film text-slate-400"></i>
+                                        <p class="font-semibold text-slate-600">Background</p>
+                                        <p class="text-slate-400 truncate w-full px-1" id="bgFileName">Pilih gambar…</p>
+                                        <input type="file" id="backgroundFile" accept="image/*" />
+                                    </label>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button id="clearBgBtn" class="btn btn-danger !py-1.5 !px-2.5 !text-xs" title="Hapus background"><i class="fas fa-trash-can"></i> Hapus BG</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Font -->
+                    <div class="tab-panel p-5" id="tab-font">
+                        <div class="mb-4 pb-4 border-b border-slate-100 space-y-3">
+                            <p class="section-title">Jenis Font</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="field-label" for="fontFamilySelect">Pilih Font</label>
+                                    <select id="fontFamilySelect" class="field-input cursor-pointer"></select>
+                                </div>
+                                <div id="customFontSection" class="hidden">
+                                    <label class="field-label">Font Custom</label>
+                                    <div class="flex items-center gap-2">
+                                        <label class="upload-zone flex-1 !p-2.5 !text-left flex items-center gap-2 cursor-pointer" for="customFontFile" style="text-align:left">
+                                            <i class="fas fa-font text-indigo-400"></i>
+                                            <span class="text-xs text-slate-500 truncate" id="customFontFileName">Upload .ttf / .otf / .woff</span>
+                                            <input type="file" id="customFontFile" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" />
+                                        </label>
+                                        <button id="clearCustomFontBtn" type="button" class="btn btn-danger !p-2.5" title="Hapus font custom"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fontPreviewBox" class="font-preview-box">
+                                <div id="fontPreviewText">PERINGKAT 1</div>
+                                <span id="fontPreviewSub">Budi Santoso — Matematika</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Title -->
+                            <div class="slider-group">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-700 font-bold text-slate-600">Judul</span>
+                                    <label class="bold-toggle"><input type="checkbox" id="titleBold" checked class="accent-indigo-600" /> Bold</label>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="titleSize" min="0.4" max="3.0" step="0.05" value="0.8" />
+                                    <span class="slider-val" id="titleSizeValue">0.8em</span>
+                                </div>
+                            </div>
+                            <!-- Participant -->
+                            <div class="slider-group">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-600">Nama Peserta</span>
+                                    <label class="bold-toggle"><input type="checkbox" id="participantBold" checked class="accent-indigo-600" /> Bold</label>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="participantSize" min="0.4" max="2.5" step="0.05" value="0.7" />
+                                    <span class="slider-val" id="participantSizeValue">0.7em</span>
+                                </div>
+                            </div>
+                            <!-- Competition -->
+                            <div class="slider-group">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-600">Lomba & Kegiatan</span>
+                                    <label class="bold-toggle"><input type="checkbox" id="competitionBold" class="accent-indigo-600" /> Bold</label>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="competitionSize" min="0.3" max="2.0" step="0.05" value="0.6" />
+                                    <span class="slider-val" id="competitionSizeValue">0.6em</span>
+                                </div>
+                            </div>
+                            <!-- Instansi -->
+                            <div class="slider-group">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold text-slate-600">Instansi</span>
+                                    <label class="bold-toggle"><input type="checkbox" id="instansiBold" class="accent-indigo-600" /> Bold</label>
+                                </div>
+                                <div class="slider-row">
+                                    <input type="range" id="instansiSize" min="0.3" max="2.0" step="0.05" value="0.55" />
+                                    <span class="slider-val" id="instansiSizeValue">0.55em</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card p-6">
-                    <h2 class="text-xl font-bold text-gray-700 flex items-center gap-3 mb-4">
-                        <i class="fas fa-palette text-blue-500"></i>
-                        <span>Pengaturan Desain</span>
-                    </h2>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-2">Pilih Template</label>
-                        <div id="templatePreviews" class="flex flex-wrap gap-3"></div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <!-- Participant data -->
+                <div class="card p-5">
+                    <p class="section-title"><i class="fas fa-users text-indigo-400"></i>Data Peserta</p>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
                         <div>
-                            <label for="textColor" class="block text-sm font-medium text-gray-600 mb-1">Warna Teks</label>
-                            <input type="color" id="textColor" value="#ffffff" class="w-full h-10 p-1 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer" />
+                            <label class="field-label">Nama</label>
+                            <input type="text" id="namaInput" placeholder="Budi Santoso" class="field-input" />
                         </div>
                         <div>
-                            <label for="backgroundFile" class="block text-sm font-medium text-gray-600 mb-1">Background Kustom</label>
-                            <div class="flex items-center gap-2">
-                                <input type="file" id="backgroundFile" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer w-full" />
-                                <button id="clearBgBtn" class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-full transition-colors" title="Hapus background"><i class="fas fa-times-circle"></i></button>
-                            </div>
+                            <label class="field-label">Jenis Lomba</label>
+                            <input type="text" id="lombaInput" placeholder="Matematika" class="field-input" />
                         </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                            <i class="fas fa-text-height text-blue-500"></i>
-                            Pengaturan Font
-                        </h3>
-
-                        <div class="font-control-group">
-                            <div class="font-control-label">
-                                <span>Judul (PERINGKAT)</span>
-                                <div class="flex items-center gap-2">
-                                    <label class="text-sm">Bold:</label>
-                                    <input type="checkbox" id="titleBold" class="w-4 h-4 text-blue-600" checked />
-                                </div>
-                            </div>
-                            <div class="font-controls">
-                                <input type="range" id="titleSize" min="0.5" max="3.0" step="0.05" value="0.8" class="font-slider" />
-                                <span id="titleSizeValue" class="font-size-value">0.8em</span>
-                            </div>
+                        <div>
+                            <label class="field-label">Kegiatan</label>
+                            <input type="text" id="kegiatanInput" placeholder="Olimpiade Sains" class="field-input" />
                         </div>
-
-                        <div class="font-control-group">
-                            <div class="font-control-label">
-                                <span>Nama Peserta</span>
-                                <div class="flex items-center gap-2">
-                                    <label class="text-sm">Bold:</label>
-                                    <input type="checkbox" id="participantBold" class="w-4 h-4 text-blue-600" checked />
-                                </div>
-                            </div>
-                            <div class="font-controls">
-                                <input type="range" id="participantSize" min="0.5" max="2.5" step="0.05" value="0.7" class="font-slider" />
-                                <span id="participantSizeValue" class="font-size-value">0.7em</span>
-                            </div>
-                        </div>
-
-                        <div class="font-control-group">
-                            <div class="font-control-label">
-                                <span>Lomba & Kegiatan</span>
-                                <div class="flex items-center gap-2">
-                                    <label class="text-sm">Bold:</label>
-                                    <input type="checkbox" id="competitionBold" class="w-4 h-4 text-blue-600" />
-                                </div>
-                            </div>
-                            <div class="font-controls">
-                                <input type="range" id="competitionSize" min="0.4" max="2.0" step="0.05" value="0.6" class="font-slider" />
-                                <span id="competitionSizeValue" class="font-size-value">0.6em</span>
-                            </div>
-                        </div>
-
-                        <div class="font-control-group">
-                            <div class="font-control-label">
-                                <span>Instansi</span>
-                                <div class="flex items-center gap-2">
-                                    <label class="text-sm">Bold:</label>
-                                    <input type="checkbox" id="instansiBold" class="w-4 h-4 text-blue-600" />
-                                </div>
-                            </div>
-                            <div class="font-controls">
-                                <input type="range" id="instansiSize" min="0.3" max="2.0" step="0.05" value="0.55" class="font-slider" />
-                                <span id="instansiSizeValue" class="font-size-value">0.55em</span>
-                            </div>
+                        <div>
+                            <label class="field-label">Peringkat</label>
+                            <input type="text" id="peringkatInput" placeholder="1" class="field-input" />
                         </div>
                     </div>
-                </div>
 
-                <div class="card p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-700 flex items-center gap-3">
-                            <i class="fas fa-users text-blue-500"></i>
-                            <span>Data Peserta</span>
-                        </h2>
-                    </div>
-
-                    <div id="form-peserta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end mb-4">
-                        <input type="hidden" id="editIdInput" />
-                        <div>
-                            <label for="namaInput" class="block text-sm font-medium text-gray-600 mb-1">Nama Peserta</label>
-                            <input type="text" id="namaInput" placeholder="Contoh: Budi" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
-                        </div>
-                        <div>
-                            <label for="lombaInput" class="block text-sm font-medium text-gray-600 mb-1">Jenis Lomba</label>
-                            <input type="text" id="lombaInput" placeholder="Cerdas Cermat" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
-                        </div>
-                        <div>
-                            <label for="kegiatanInput" class="block text-sm font-medium text-gray-600 mb-1">Kegiatan</label>
-                            <input type="text" id="kegiatanInput" placeholder="Olimpiade Sains" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
-                        </div>
-                        <div>
-                            <label for="peringkatInput" class="block text-sm font-medium text-gray-600 mb-1">Peringkat</label>
-                            <input type="text" id="peringkatInput" placeholder="1" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between flex-wrap gap-2">
-                        <button id="addPesertaBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm">
-                            <i class="fas fa-plus-circle"></i> <span id="addBtnText">Tambah Peserta</span>
+                    <div class="flex flex-wrap items-center gap-2 mb-5">
+                        <button id="addPesertaBtn" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i>
+                            <span id="addBtnText">Tambah</span>
                         </button>
-                        <div class="flex gap-2">
-                            <button id="btnAddSample" class="bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors flex items-center gap-2 text-sm"><i class="fas fa-vial"></i> Tambah Contoh</button>
-                            <button id="btnAdd20" class="bg-purple-200 text-purple-700 font-semibold py-2 px-4 rounded-lg hover:bg-purple-300 transition-colors flex items-center gap-2 text-sm"><i class="fas fa-layer-group"></i> Tambah 20 Contoh</button>
-                            <button id="btnResetAll" class="bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-lg hover:bg-red-200 transition-colors flex items-center gap-2 text-sm"><i class="fas fa-trash-alt"></i> Reset Semua</button>
-                        </div>
+                        <button id="btnAddSample" class="btn btn-secondary"><i class="fas fa-vial"></i> Contoh</button>
+                        <button id="btnAdd20" class="btn btn-purple"><i class="fas fa-layer-group"></i> 20 Data</button>
+                        <button id="btnResetAll" class="btn btn-danger ml-auto"><i class="fas fa-trash-alt"></i> Reset</button>
                     </div>
 
-                    <div class="mt-6 overflow-x-auto rounded-lg border border-gray-200">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <!-- Table (scrollable on mobile) -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-100">
+                        <table class="data-table">
+                            <thead>
                                 <tr>
-                                    <th scope="col" class="px-6 py-3">Nama</th>
-                                    <th scope="col" class="px-6 py-3">Lomba</th>
-                                    <th scope="col" class="px-6 py-3">Peringkat</th>
-                                    <th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                    <th>Nama</th>
+                                    <th>Lomba</th>
+                                    <th>Peringkat</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="pesertaTableBody"></tbody>
                         </table>
-                        <p id="noDataMessage" class="text-center text-gray-400 py-8 hidden">Belum ada data peserta. Silakan tambahkan.</p>
+                        <p id="noDataMessage" class="text-center text-slate-400 py-8 text-sm hidden">
+                            <i class="fas fa-inbox text-2xl block mb-2 text-slate-200"></i>
+                            Belum ada data. Silakan tambahkan peserta.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-1 space-y-6">
-                <div class="card p-6">
-                    <h2 class="text-xl font-bold text-gray-700 flex items-center gap-3 mb-4">
-                        <i class="fas fa-print text-blue-500"></i>
-                        <span>Pengaturan Cetak</span>
-                    </h2>
-                    <div class="grid grid-cols-2 gap-4">
+            <!-- RIGHT SIDEBAR -->
+            <div class="space-y-5">
+
+                <!-- Print settings -->
+                <div class="card p-5">
+                    <p class="section-title"><i class="fas fa-print text-indigo-400"></i>Pengaturan Cetak</p>
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label for="stickerWidth" class="block text-sm font-medium text-gray-600 mb-1">Lebar (cm)</label>
-                            <input type="number" id="stickerWidth" value="5" min="3" max="10" step="0.1" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
+                            <label class="field-label">Lebar (cm)</label>
+                            <input type="number" id="stickerWidth" value="5" min="3" max="10" step="0.1" class="field-input" />
                         </div>
                         <div>
-                            <label for="stickerHeight" class="block text-sm font-medium text-gray-600 mb-1">Tinggi (cm)</label>
-                            <input type="number" id="stickerHeight" value="6" min="3" max="15" step="0.1" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm" />
+                            <label class="field-label">Tinggi (cm)</label>
+                            <input type="number" id="stickerHeight" value="6" min="3" max="15" step="0.1" class="field-input" id="heightInput" />
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="roundStickerCheckbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
-                            <span class="text-sm font-medium text-gray-700">Stiker Bulat (Hanya Gambar/Pola)</span>
-                        </label>
+                    <label class="flex items-center gap-2.5 cursor-pointer mt-3 p-2.5 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-colors select-none">
+                        <input type="checkbox" id="roundStickerCheckbox" class="w-4 h-4 accent-indigo-600" />
+                        <div>
+                            <span class="text-sm font-semibold text-slate-700">Stiker Bulat</span>
+                            <p class="text-xs text-slate-400 leading-tight">Tinggi = Lebar secara otomatis</p>
+                        </div>
+                    </label>
+
+                    <div id="roundStickerOptions" class="hidden mt-2 border-l-2 border-indigo-100 ml-2.5 pl-3">
+                        <p class="field-label mb-2">Gambar Stiker Bulat</p>
+                        <div id="roundImagePreviewArea" class="hidden image-preview-compact mb-2">
+                            <div class="logo-preview-wrap">
+                                <img id="roundImagePreviewImg" src="" alt="Gambar bulat" class="logo-preview-img !rounded-full" />
+                                <button id="clearRoundImageBtn" type="button" class="logo-clear-btn"><i class="fas fa-times"></i></button>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-semibold text-slate-700">Gambar aktif</p>
+                                <p class="text-xs text-slate-400">Mengisi lingkaran stiker</p>
+                            </div>
+                        </div>
+                        <div class="image-options-grid">
+                            <label class="option-check-box select-none" for="hideTextCheckbox">
+                                <input type="checkbox" id="hideTextCheckbox" class="w-4 h-4 accent-indigo-600" />
+                                <span class="text-xs font-semibold text-slate-700">Sembunyikan Teks</span>
+                                <p class="text-[0.65rem] text-slate-400 leading-tight mt-0.5">Hanya gambar</p>
+                            </label>
+                            <label class="upload-zone compact" for="roundImageFile">
+                                <i class="fas fa-circle-dot text-indigo-300"></i>
+                                <p class="font-semibold text-slate-600">Upload Gambar</p>
+                                <p class="text-slate-400">PNG/JPG persegi</p>
+                                <input type="file" id="roundImageFile" accept="image/*" />
+                            </label>
+                        </div>
                     </div>
-                    <div class="mt-4 p-3 bg-blue-50 rounded-lg">
-                        <p class="text-xs text-blue-700">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Ukuran stiker akan tetap sesuai pengaturan Anda saat cetak
-                        </p>
+
+                    <div class="info-badge mt-3">
+                        <i class="fas fa-circle-info mt-0.5 flex-shrink-0"></i>
+                        <span>Ukuran stiker dipertahankan persis saat cetak di kertas A4.</span>
                     </div>
-                    <div id="printInfo" class="mt-4 p-3 bg-green-50 rounded-lg hidden">
-                        <p class="text-xs text-green-700">
-                            <i class="fas fa-file-alt mr-1"></i>
-                            <span id="printInfoText"></span>
-                        </p>
+
+                    <div id="printInfo" class="info-badge mt-2 hidden" style="background:#F0FDF4;color:#166534;border:1px solid #BBF7D0;">
+                        <i class="fas fa-file-lines mt-0.5 flex-shrink-0"></i>
+                        <span id="printInfoText"></span>
                     </div>
-                    <button id="btnPrint" class="mt-4 w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all flex items-center justify-center gap-2 shadow-lg">
+
+                    <button id="btnPrint" class="btn btn-print mt-4">
                         <i class="fas fa-print"></i> CETAK STIKER
                     </button>
                 </div>
 
-                <div class="card p-6 sticky top-8">
-                    <h2 class="text-xl font-bold text-gray-700 flex items-center gap-3 mb-4">
-                        <i class="fas fa-eye text-blue-500"></i>
-                        <span>Preview</span>
-                    </h2>
-                    <div class="sticker-print-area bg-gray-100 p-4 rounded-lg min-h-[300px]">
-                        <div id="stickerPreview" class="sticker-page grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+                <!-- Preview -->
+                <div class="card p-5 xl:sticky xl:top-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="section-title mb-0"><i class="fas fa-eye text-indigo-400"></i>Preview</p>
+                        <span id="previewCount" class="text-xs font-semibold text-slate-400"></span>
                     </div>
+                    <div id="stickerPreviewWrap"></div>
                 </div>
             </div>
-        </main>
+        </div>
 
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            <p>© 2023 Pro StickerGen - Aplikasi Cetak Stiker Profesional</p>
+        <footer class="mt-10 text-center text-slate-400 text-xs">
+            © 2024 Pro StickerGen · Aplikasi Cetak Stiker Penghargaan Profesional
         </footer>
     </div>
 
-    <div class="print-container" style="display: none;"></div>
+    <!-- Print container (hidden) -->
+    <div class="print-container" style="display:none;"></div>
 
-    <div id="customModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div id="modalContent" class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm m-4 transform scale-95 transition-transform duration-300">
-            <h3 id="modalTitle" class="text-lg font-bold text-gray-800">Konfirmasi</h3>
-            <p id="modalMessage" class="text-gray-600 mt-2 mb-6">Apakah Anda yakin?</p>
-            <div class="flex justify-end gap-3">
-                <button id="modalCancel" class="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300">Batal</button>
-                <button id="modalConfirm" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700">Yakin</button>
+    <!-- Modal -->
+    <div id="customModal" class="modal-backdrop">
+        <div class="modal-box">
+            <h3 id="modalTitle" class="text-base font-bold text-slate-800 mb-2">Konfirmasi</h3>
+            <p id="modalMessage" class="text-sm text-slate-600 mb-6 leading-relaxed">Apakah Anda yakin?</p>
+            <div class="flex justify-end gap-2">
+                <button id="modalCancel" class="btn btn-secondary">Batal</button>
+                <button id="modalConfirm" class="btn btn-danger">Yakin</button>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="fixed bottom-20 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300">
-        <div class="flex items-center gap-2">
-            <i class="fas fa-check-circle"></i>
-            <span id="notificationMessage">Perubahan disimpan!</span>
-        </div>
+    <!-- Toast -->
+    <div id="toast" class="toast success">
+        <i id="toastIcon" class="fas fa-check-circle"></i>
+        <span id="toastMessage">OK</span>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let pesertaData = [];
-        let nextId = 1;
-        let editId = null;
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    /* ── State ── */
+    let pesertaData = [];
+    let nextId = 1;
+    let editId = null;
 
-        const appState = {
-            stickerTitle: 'PERINGKAT',
-            instansi: 'SDN Harapan Bangsa',
-            currentTemplate: 'template1',
-            textColor: '#ffffff',
-            stickerBackground: null,
-            stickerWidth: 5,
-            stickerHeight: 6,
-            isRound: false,
-            fontSettings: {
-                title: { size: 0.8, bold: true },
-                participant: { size: 0.7, bold: true },
-                competition: { size: 0.6, bold: false },
-                instansi: { size: 0.55, bold: false }
-            }
-        };
-
-        const MARGIN_MM = 6; // total margin used in calculations (same everywhere)
-
-        const TEMPLATES = [
-            { id: 'template1', name: 'Emas Merah', class: 'template1' },
-            { id: 'template2', name: 'Biru Modern', class: 'template2' },
-            { id: 'template3', name: 'Ungu Premium', class: 'template3' },
-            { id: 'template4', name: 'Hijau Segar', class: 'template4' },
-            { id: 'template5', name: 'Oranye Cerah', class: 'template5' },
-            { id: 'template6', name: 'Gradasi Pelangi', class: 'template6' },
-        ];
-
-        const elements = {
-            titleInput: document.getElementById('titleInput'),
-            instansiInput: document.getElementById('instansiInput'),
-            templatePreviews: document.getElementById('templatePreviews'),
-            textColor: document.getElementById('textColor'),
-            backgroundFile: document.getElementById('backgroundFile'),
-            clearBgBtn: document.getElementById('clearBgBtn'),
-            namaInput: document.getElementById('namaInput'),
-            lombaInput: document.getElementById('lombaInput'),
-            kegiatanInput: document.getElementById('kegiatanInput'),
-            peringkatInput: document.getElementById('peringkatInput'),
-            addPesertaBtn: document.getElementById('addPesertaBtn'),
-            addBtnText: document.getElementById('addBtnText'),
-            editIdInput: document.getElementById('editIdInput'),
-            pesertaTableBody: document.getElementById('pesertaTableBody'),
-            noDataMessage: document.getElementById('noDataMessage'),
-            stickerWidth: document.getElementById('stickerWidth'),
-            stickerHeight: document.getElementById('stickerHeight'),
-            roundStickerCheckbox: document.getElementById('roundStickerCheckbox'),
-            stickerPreview: document.getElementById('stickerPreview'),
-            printInfo: document.getElementById('printInfo'),
-            printInfoText: document.getElementById('printInfoText'),
-            modal: document.getElementById('customModal'),
-            modalContent: document.getElementById('modalContent'),
-            modalTitle: document.getElementById('modalTitle'),
-            modalMessage: document.getElementById('modalMessage'),
-            modalConfirm: document.getElementById('modalConfirm'),
-            modalCancel: document.getElementById('modalCancel'),
-            notification: document.getElementById('notification'),
-            notificationMessage: document.getElementById('notificationMessage'),
-            titleSize: document.getElementById('titleSize'),
-            titleSizeValue: document.getElementById('titleSizeValue'),
-            titleBold: document.getElementById('titleBold'),
-            participantSize: document.getElementById('participantSize'),
-            participantSizeValue: document.getElementById('participantSizeValue'),
-            participantBold: document.getElementById('participantBold'),
-            competitionSize: document.getElementById('competitionSize'),
-            competitionSizeValue: document.getElementById('competitionSizeValue'),
-            competitionBold: document.getElementById('competitionBold'),
-            instansiSize: document.getElementById('instansiSize'),
-            instansiSizeValue: document.getElementById('instansiSizeValue'),
-            instansiBold: document.getElementById('instansiBold'),
-            btnPrint: document.getElementById('btnPrint'),
-            btnAddSample: document.getElementById('btnAddSample'),
-            btnAdd20: document.getElementById('btnAdd20'),
-            btnResetAll: document.getElementById('btnResetAll')
-        };
-
-        // Modal
-        let confirmCallback = null;
-        let modalResetAfterClose = false;
-        function showModal(title, message, onConfirm, resetAfterClose = false) {
-            elements.modalTitle.textContent = title;
-            elements.modalMessage.textContent = message;
-            confirmCallback = onConfirm;
-            modalResetAfterClose = resetAfterClose;
-            elements.modal.classList.remove('opacity-0', 'pointer-events-none');
-            elements.modalContent.classList.remove('scale-95');
+    const S = {
+        stickerTitle: 'PERINGKAT',
+        instansi: 'SDN Harapan Bangsa',
+        currentTemplate: 'tmpl-gold',
+        customColor1: '#4F46E5',
+        customColor2: '#7C3AED',
+        textColor: '#ffffff',
+        stickerBackground: null,
+        logoImage: null,
+        stickerWidth: 5,
+        stickerHeight: 6,
+        isRound: false,
+        hideText: false,
+        roundImage: null,
+        fontFamilyId: 'plus-jakarta',
+        customFontName: null,
+        customFontUrl: null,
+        font: {
+            title:  { size: 0.80, bold: true  },
+            name:   { size: 0.70, bold: true  },
+            comp:   { size: 0.60, bold: false },
+            inst:   { size: 0.55, bold: false }
         }
-        function hideModal() {
-            elements.modal.classList.add('opacity-0', 'pointer-events-none');
-            elements.modalContent.classList.add('scale-95');
-            if (modalResetAfterClose) {
-                elements.modalConfirm.classList.remove('hidden');
-                elements.modalCancel.textContent = 'Batal';
-                modalResetAfterClose = false;
-            }
-            confirmCallback = null;
-        }
-        elements.modalConfirm.addEventListener('click', () => { if (confirmCallback) confirmCallback(); hideModal(); });
-        elements.modalCancel.addEventListener('click', hideModal);
-        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideModal(); });
+    };
 
-        // Notification (throttled)
-        let lastNotifTime = 0;
-        function showNotification(message, type = 'success') {
-            const now = Date.now();
-            if (now - lastNotifTime < 800) return; // throttle to reduce noise
-            lastNotifTime = now;
-            elements.notificationMessage.textContent = message;
-            if (type === 'error') {
-                elements.notification.classList.remove('bg-green-600');
-                elements.notification.classList.add('bg-red-600');
-            } else {
-                elements.notification.classList.remove('bg-red-600');
-                elements.notification.classList.add('bg-green-600');
-            }
-            elements.notification.style.transform = 'translateY(0)';
-            elements.notification.style.opacity = '1';
-            setTimeout(() => {
-                elements.notification.style.transform = 'translateY(80px)';
-                elements.notification.style.opacity = '0';
-            }, 1800);
-        }
+    const FONTS = [
+        { id: 'plus-jakarta', name: 'Plus Jakarta Sans', family: "'Plus Jakarta Sans', sans-serif" },
+        { id: 'poppins',      name: 'Poppins',           family: "'Poppins', sans-serif" },
+        { id: 'montserrat',   name: 'Montserrat',        family: "'Montserrat', sans-serif" },
+        { id: 'oswald',       name: 'Oswald',            family: "'Oswald', sans-serif" },
+        { id: 'bebas-neue',   name: 'Bebas Neue',        family: "'Bebas Neue', sans-serif" },
+        { id: 'roboto',       name: 'Roboto',            family: "'Roboto', sans-serif" },
+        { id: 'lato',         name: 'Lato',              family: "'Lato', sans-serif" },
+        { id: 'playfair',     name: 'Playfair Display',  family: "'Playfair Display', serif" },
+        { id: 'merriweather', name: 'Merriweather',      family: "'Merriweather', serif" },
+        { id: 'custom',       name: 'Font Custom (Upload)', family: null },
+    ];
 
-        // Safe element helpers
-        function el(tag, className) { const e = document.createElement(tag); if (className) e.className = className; return e; }
-        function textDiv(className, text) { const d = el('div', className); d.textContent = text; return d; }
+    const TEMPLATES = [
+        { id: 'tmpl-gold',    label: 'Emas' },
+        { id: 'tmpl-ocean',   label: 'Biru' },
+        { id: 'tmpl-purple',  label: 'Ungu' },
+        { id: 'tmpl-emerald', label: 'Hijau' },
+        { id: 'tmpl-sunset',  label: 'Oranye' },
+        { id: 'tmpl-rose',    label: 'Rose' },
+        { id: 'tmpl-slate',   label: 'Gelap' },
+        { id: 'tmpl-teal',    label: 'Teal' },
+        { id: 'tmpl-custom',  label: 'Custom' },
+    ];
 
-        function renderPesertaTable() {
-            elements.pesertaTableBody.innerHTML = '';
-            if (pesertaData.length === 0) { elements.noDataMessage.classList.remove('hidden'); return; }
-            elements.noDataMessage.classList.add('hidden');
-            pesertaData.forEach(p => {
-                const row = document.createElement('tr');
-                row.className = 'bg-white border-b hover:bg-gray-50';
-                const tdNama = el('td', 'px-6 py-4 font-medium text-gray-900 whitespace-nowrap');
-                tdNama.textContent = p.nama;
-                const tdLomba = el('td', 'px-6 py-4');
-                const lombaSpan = el('div'); lombaSpan.textContent = p.lomba;
-                const kegSmall = el('small', 'text-gray-400'); kegSmall.textContent = p.kegiatan;
-                tdLomba.appendChild(lombaSpan); tdLomba.appendChild(kegSmall);
-                const tdPeringkat = el('td', 'px-6 py-4'); tdPeringkat.textContent = p.peringkat;
-                const tdAksi = el('td', 'px-6 py-4 text-center');
-                const actWrap = el('div', 'flex justify-center gap-2');
-                const btnEdit = el('button', 'text-blue-600 hover:text-blue-800 p-2'); btnEdit.innerHTML = '<i class="fas fa-edit"></i>'; btnEdit.addEventListener('click', () => window.app.editPeserta(p.id));
-                const btnDel = el('button', 'text-red-600 hover:text-red-800 p-2'); btnDel.innerHTML = '<i class="fas fa-trash-alt"></i>'; btnDel.addEventListener('click', () => window.app.confirmDelete(p.id));
-                actWrap.append(btnEdit, btnDel); tdAksi.appendChild(actWrap);
-                row.append(tdNama, tdLomba, tdPeringkat, tdAksi);
-                elements.pesertaTableBody.appendChild(row);
-            });
-        }
+    const $ = id => document.getElementById(id);
 
-        function getTemplateClass() {
-            return (TEMPLATES.find(t => t.id === appState.currentTemplate) || TEMPLATES[0]).class;
-        }
+    const el = {
+        titleInput:         $('titleInput'),
+        instansiInput:      $('instansiInput'),
+        templatePreviews:   $('templatePreviews'),
+        customColor1:       $('customColor1'),
+        customColor2:       $('customColor2'),
+        customColor1Val:    $('customColor1Val'),
+        customColor2Val:    $('customColor2Val'),
+        customGradientPreview: $('customGradientPreview'),
+        textColor:          $('textColor'),
+        logoFile:           $('logoFile'),
+        logoPreviewArea:    $('logoPreviewArea'),
+        logoPreviewImg:     $('logoPreviewImg'),
+        clearLogoBtn:       $('clearLogoBtn'),
+        backgroundFile:     $('backgroundFile'),
+        bgFileName:         $('bgFileName'),
+        clearBgBtn:         $('clearBgBtn'),
+        namaInput:          $('namaInput'),
+        lombaInput:         $('lombaInput'),
+        kegiatanInput:      $('kegiatanInput'),
+        peringkatInput:     $('peringkatInput'),
+        addPesertaBtn:      $('addPesertaBtn'),
+        addBtnText:         $('addBtnText'),
+        pesertaTableBody:   $('pesertaTableBody'),
+        noDataMessage:      $('noDataMessage'),
+        stickerWidth:       $('stickerWidth'),
+        stickerHeight:      $('stickerHeight'),
+        roundStickerCb:     $('roundStickerCheckbox'),
+        roundStickerOptions:$('roundStickerOptions'),
+        hideTextCb:         $('hideTextCheckbox'),
+        roundImageFile:     $('roundImageFile'),
+        roundImagePreviewArea: $('roundImagePreviewArea'),
+        roundImagePreviewImg:  $('roundImagePreviewImg'),
+        clearRoundImageBtn: $('clearRoundImageBtn'),
+        previewWrap:        $('stickerPreviewWrap'),
+        previewCount:       $('previewCount'),
+        printInfo:          $('printInfo'),
+        printInfoText:      $('printInfoText'),
+        modal:              $('customModal'),
+        modalTitle:         $('modalTitle'),
+        modalMessage:       $('modalMessage'),
+        modalConfirm:       $('modalConfirm'),
+        modalCancel:        $('modalCancel'),
+        toast:              $('toast'),
+        toastIcon:          $('toastIcon'),
+        toastMessage:       $('toastMessage'),
+        btnPrint:           $('btnPrint'),
+        btnAddSample:       $('btnAddSample'),
+        btnAdd20:           $('btnAdd20'),
+        btnResetAll:        $('btnResetAll'),
+        titleSize:          $('titleSize'),
+        titleSizeVal:       $('titleSizeValue'),
+        titleBold:          $('titleBold'),
+        participantSize:    $('participantSize'),
+        participantSizeVal: $('participantSizeValue'),
+        participantBold:    $('participantBold'),
+        competitionSize:    $('competitionSize'),
+        competitionSizeVal: $('competitionSizeValue'),
+        competitionBold:    $('competitionBold'),
+        instansiSize:       $('instansiSize'),
+        instansiSizeVal:    $('instansiSizeValue'),
+        instansiBold:       $('instansiBold'),
+        fontFamilySelect:   $('fontFamilySelect'),
+        customFontSection:  $('customFontSection'),
+        customFontFile:     $('customFontFile'),
+        customFontFileName: $('customFontFileName'),
+        clearCustomFontBtn: $('clearCustomFontBtn'),
+        fontPreviewText:    $('fontPreviewText'),
+        fontPreviewSub:     $('fontPreviewSub'),
+    };
 
-        function buildStickerContent(p) {
-            const content = el('div', 'sticker-content rounded-md p-2 w-full h-full flex flex-col justify-center');
+    function showImagePreview(area, img, src) {
+        img.src = src;
+        area.classList.remove('hidden');
+        area.style.removeProperty('display');
+    }
 
-            const title = textDiv('title uppercase tracking-wide', `${appState.stickerTitle} ${p.peringkat}`);
-            title.style.fontSize = appState.fontSettings.title.size + 'em';
-            title.style.fontWeight = appState.fontSettings.title.bold ? 'bold' : 'normal';
+    function hideImagePreview(area, img) {
+        img.removeAttribute('src');
+        area.classList.add('hidden');
+        area.style.removeProperty('display');
+    }
 
-            const participant = textDiv('participant my-1', p.nama);
-            participant.style.fontSize = appState.fontSettings.participant.size + 'em';
-            participant.style.fontWeight = appState.fontSettings.participant.bold ? 'bold' : 'normal';
+    /* ── Toast ── */
+    let toastTimer;
+    function toast(msg, type = 'success') {
+        el.toastMessage.textContent = msg;
+        el.toast.className = 'toast ' + type;
+        el.toastIcon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+        el.toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.toast.classList.remove('show'), 2200);
+    }
 
-            const competition = el('div', 'competition');
-            const lombaLine = el('div'); lombaLine.textContent = p.lomba;
-            const kegiatanLine = el('div'); kegiatanLine.textContent = p.kegiatan;
-            competition.append(lombaLine, kegiatanLine);
-            competition.style.fontSize = appState.fontSettings.competition.size + 'em';
-            competition.style.fontWeight = appState.fontSettings.competition.bold ? 'bold' : 'normal';
+    /* ── Modal ── */
+    let confirmCb = null;
+    function showModal(title, msg, onConfirm, hideConfirmBtn = false) {
+        el.modalTitle.textContent = title;
+        el.modalMessage.textContent = msg;
+        confirmCb = onConfirm;
+        el.modalConfirm.style.display = hideConfirmBtn ? 'none' : '';
+        el.modalCancel.textContent = hideConfirmBtn ? 'Tutup' : 'Batal';
+        el.modal.classList.add('open');
+    }
+    function hideModal() { el.modal.classList.remove('open'); confirmCb = null; }
+    el.modalConfirm.addEventListener('click', () => { if (confirmCb) confirmCb(); hideModal(); });
+    el.modalCancel.addEventListener('click', hideModal);
+    el.modal.addEventListener('click', e => { if (e.target === el.modal) hideModal(); });
 
-            content.append(title, participant, competition);
-
-            if (appState.instansi) {
-                const instansi = textDiv('instansi text-xs mt-1 pt-1 border-t border-white/30', appState.instansi);
-                instansi.style.fontSize = appState.fontSettings.instansi.size + 'em';
-                instansi.style.fontWeight = appState.fontSettings.instansi.bold ? 'bold' : 'normal';
-                content.appendChild(instansi);
-            }
-            return content;
-        }
-
-        function renderStickers() {
-            elements.stickerPreview.innerHTML = '';
-            if (pesertaData.length === 0) {
-                elements.stickerPreview.innerHTML = `
-                    <div class="col-span-full flex flex-col items-center justify-center text-center p-8">
-                        <i class="fas fa-image text-gray-300 text-4xl mb-4"></i>
-                        <h3 class="font-medium text-gray-400">Preview Stiker</h3>
-                        <p class="text-sm text-gray-400 mt-1">Tambahkan data peserta untuk melihat preview</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const tmplClass = getTemplateClass();
-            pesertaData.forEach(p => {
-                const sticker = el('div', `sticker ${tmplClass} rounded-lg flex flex-col justify-center items-center p-2 text-center shadow-md aspect-[5/6] transition-all duration-300 ${appState.isRound ? 'round' : ''}`);
-                sticker.style.width = appState.stickerWidth + 'cm';
-                sticker.style.height = (appState.isRound ? appState.stickerWidth : appState.stickerHeight) + 'cm';
-                sticker.style.minWidth = '80px';
-                sticker.style.minHeight = appState.isRound ? '80px' : '96px';
-                sticker.style.color = appState.textColor;
-                if (appState.stickerBackground) sticker.style.backgroundImage = `url(${appState.stickerBackground})`;
-
-                sticker.appendChild(buildStickerContent(p));
-                elements.stickerPreview.appendChild(sticker);
-            });
-            updatePrintInfo();
-        }
-
-        function renderTemplatePreviews() {
-            elements.templatePreviews.innerHTML = TEMPLATES.map(t => `
-                <div class="template-preview-item ${t.class} w-12 h-12 rounded-lg cursor-pointer border-2 transition-all ${appState.currentTemplate === t.id ? 'border-blue-500 scale-110 shadow-lg' : 'border-transparent'}" data-template="${t.id}" title="${t.name}"></div>
-            `).join('');
-        }
-
-        function updateCssVariables() {
-            const widthInMm = appState.stickerWidth * 10;
-            const heightInMm = (appState.isRound ? appState.stickerWidth : appState.stickerHeight) * 10;
-            document.documentElement.style.setProperty('--sticker-width', widthInMm + 'mm');
-            document.documentElement.style.setProperty('--sticker-height', heightInMm + 'mm');
-            document.documentElement.style.setProperty('--sticker-border-radius', appState.isRound ? '50%' : '0.5rem');
-            // Apply text color for print via CSS variable
-            document.documentElement.style.setProperty('--sticker-text-color', appState.textColor);
-            document.documentElement.style.setProperty('--title-font-size', appState.fontSettings.title.size + 'em');
-            document.documentElement.style.setProperty('--title-font-weight', appState.fontSettings.title.bold ? 'bold' : 'normal');
-            document.documentElement.style.setProperty('--participant-font-size', appState.fontSettings.participant.size + 'em');
-            document.documentElement.style.setProperty('--participant-font-weight', appState.fontSettings.participant.bold ? 'bold' : 'normal');
-            document.documentElement.style.setProperty('--competition-font-size', appState.fontSettings.competition.size + 'em');
-            document.documentElement.style.setProperty('--competition-font-weight', appState.fontSettings.competition.bold ? 'bold' : 'normal');
-            document.documentElement.style.setProperty('--instansi-font-size', appState.fontSettings.instansi.size + 'em');
-            document.documentElement.style.setProperty('--instansi-font-weight', appState.fontSettings.instansi.bold ? 'bold' : 'normal');
-        }
-
-        function computeLayoutInfo() {
-            const widthInMm = appState.stickerWidth * 10;
-            const heightInMm = (appState.isRound ? appState.stickerWidth : appState.stickerHeight) * 10;
-            const availableWidth = 210 - MARGIN_MM; // total reduction
-            const availableHeight = 297 - MARGIN_MM;
-            const cols = Math.max(1, Math.floor(availableWidth / (widthInMm + 2)));
-            const rows = Math.max(1, Math.floor(availableHeight / (heightInMm + 2)));
-            const perPage = Math.max(1, cols * rows);
-            return { widthInMm, heightInMm, cols, rows, perPage };
-        }
-
-        function updatePrintInfo() {
-            if (pesertaData.length === 0) { elements.printInfo.classList.add('hidden'); return; }
-            const { cols, rows, perPage } = computeLayoutInfo();
-            const totalPages = Math.ceil(pesertaData.length / perPage);
-            elements.printInfoText.textContent = `${pesertaData.length} stiker akan dicetak dalam ${totalPages} halaman (${perPage} stiker/halaman)`;
-            elements.printInfo.classList.remove('hidden');
-        }
-
-        function updateAll() { renderPesertaTable(); renderStickers(); updateCssVariables(); }
-
-        function updateFontSettings() {
-            appState.fontSettings = {
-                title: { size: parseFloat(elements.titleSize.value), bold: elements.titleBold.checked },
-                participant: { size: parseFloat(elements.participantSize.value), bold: elements.participantBold.checked },
-                competition: { size: parseFloat(elements.competitionSize.value), bold: elements.competitionBold.checked },
-                instansi: { size: parseFloat(elements.instansiSize.value), bold: elements.instansiBold.checked }
-            };
-            renderStickers(); updateCssVariables(); showNotification('Pengaturan font diperbarui');
-        }
-
-        elements.titleSize.addEventListener('input', function(){ elements.titleSizeValue.textContent = this.value + 'em'; updateFontSettings(); });
-        elements.titleBold.addEventListener('change', updateFontSettings);
-        elements.participantSize.addEventListener('input', function(){ elements.participantSizeValue.textContent = this.value + 'em'; updateFontSettings(); });
-        elements.participantBold.addEventListener('change', updateFontSettings);
-        elements.competitionSize.addEventListener('input', function(){ elements.competitionSizeValue.textContent = this.value + 'em'; updateFontSettings(); });
-        elements.competitionBold.addEventListener('change', updateFontSettings);
-        elements.instansiSize.addEventListener('input', function(){ elements.instansiSizeValue.textContent = this.value + 'em'; updateFontSettings(); });
-        elements.instansiBold.addEventListener('change', updateFontSettings);
-
-        function handleParticipantForm() {
-            const nama = elements.namaInput.value.trim();
-            const lomba = elements.lombaInput.value.trim();
-            const kegiatan = elements.kegiatanInput.value.trim();
-            const peringkat = elements.peringkatInput.value.trim();
-            if (!nama || !lomba || !kegiatan || !peringkat) {
-                showModal('Input Tidak Lengkap', 'Mohon isi semua kolom data peserta.', null, true);
-                elements.modalConfirm.classList.add('hidden');
-                elements.modalCancel.textContent = 'Tutup';
-                return;
-            }
-            if (editId) {
-                const index = pesertaData.findIndex(p => p.id === editId);
-                if (index > -1) { pesertaData[index] = { ...pesertaData[index], nama, lomba, kegiatan, peringkat }; }
-                editId = null;
-                elements.addBtnText.textContent = 'Tambah Peserta';
-                elements.addPesertaBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
-                elements.addPesertaBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-            } else {
-                pesertaData.push({ id: nextId++, nama, lomba, kegiatan, peringkat });
-            }
-            clearParticipantForm();
-            updateAll();
-            elements.namaInput.focus();
-            showNotification('Data peserta diperbarui');
-        }
-
-        function clearParticipantForm(){ elements.namaInput.value=''; elements.lombaInput.value=''; elements.kegiatanInput.value=''; elements.peringkatInput.value=''; editId=null; }
-
-        window.app = {
-            editPeserta(id) {
-                const peserta = pesertaData.find(p => p.id === id); if (!peserta) return;
-                editId = id;
-                elements.namaInput.value = peserta.nama;
-                elements.lombaInput.value = peserta.lomba;
-                elements.kegiatanInput.value = peserta.kegiatan;
-                elements.peringkatInput.value = peserta.peringkat;
-                elements.addBtnText.textContent = 'Update Peserta';
-                elements.addPesertaBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                elements.addPesertaBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
-                elements.namaInput.focus();
-                document.getElementById('form-peserta').scrollIntoView({ behavior: 'smooth' });
-            },
-            confirmDelete(id) {
-                showModal('Konfirmasi Hapus', 'Apakah Anda yakin ingin menghapus data peserta ini?', () => {
-                    pesertaData = pesertaData.filter(p => p.id !== id);
-                    updateAll();
-                    showNotification('Data peserta dihapus');
-                });
-            }
-        };
-
-        function confirmResetAll() {
-            showModal('Konfirmasi Reset', 'Tindakan ini akan menghapus SEMUA data peserta. Apakah Anda yakin?', () => {
-                pesertaData = []; nextId = 1; updateAll(); showNotification('Semua data direset');
-            });
-        }
-
-        function computePages() {
-            const { perPage } = computeLayoutInfo();
-            const pages = [];
-            for (let i = 0; i < pesertaData.length; i += perPage) pages.push(pesertaData.slice(i, i + perPage));
-            return pages;
-        }
-
-        function preparePrint() {
-            const printContainer = document.querySelector('.print-container');
-            printContainer.innerHTML = '';
-            const pages = computePages();
-            const tmplClass = getTemplateClass();
-            pages.forEach((pageData) => {
-                const printPage = el('div', 'print-page');
-                const stickerArea = el('div', 'sticker-print-area');
-                pageData.forEach(p => {
-                    const sticker = el('div', `sticker ${tmplClass} ${appState.isRound ? 'round' : ''}`);
-                    sticker.style.color = appState.textColor;
-                    if (appState.stickerBackground) sticker.style.backgroundImage = `url(${appState.stickerBackground})`;
-                    sticker.appendChild(buildStickerContent(p));
-                    stickerArea.appendChild(sticker);
-                });
-                printPage.appendChild(stickerArea);
-                printContainer.appendChild(printPage);
-            });
-            window.print();
-            setTimeout(() => { printContainer.innerHTML = ''; }, 1000);
-            showNotification('Mempersiapkan halaman cetak...');
-        }
-
-        function confirmPrint() {
-            if (pesertaData.length === 0) {
-                showModal('Tidak Ada Data', 'Tidak ada data peserta untuk dicetak. Silakan tambahkan data peserta terlebih dahulu.', null, true);
-                elements.modalConfirm.classList.add('hidden');
-                elements.modalCancel.textContent = 'Tutup';
-                return;
-            }
-            const { perPage } = computeLayoutInfo();
-            const totalPages = Math.ceil(pesertaData.length / perPage);
-            let message = `Apakah Anda yakin ingin mencetak ${pesertaData.length} stiker?`;
-            if (totalPages > 1) message += `\n\nIni akan menghasilkan ${totalPages} halaman cetak dengan ${perPage} stiker per halaman.`;
-            showModal('Konfirmasi Cetak', message, preparePrint);
-        }
-
-        function addSampleData() {
-            pesertaData = [
-                { id: 1, nama: 'Ahmad Fauzi', lomba: 'Cerdas Cermat', kegiatan: 'Olimpiade Sains', peringkat: '1' },
-                { id: 2, nama: 'Budi Santoso', lomba: 'Matematika', kegiatan: 'Olimpiade Sains', peringkat: '2' },
-                { id: 3, nama: 'Citra Dewi', lomba: 'Menulis Esai', kegiatan: 'Festival Literasi', peringkat: '1' }
-            ];
-            nextId = 4; updateAll(); showNotification('Data contoh telah ditambahkan');
-        }
-
-        function addManySampleData() {
-            const names = ['Ahmad','Budi','Citra','Diana','Eko','Fajar','Gita','Hadi','Indra','Julia','Karina','Lukman','Maya','Nina','Omar','Putri','Qori','Rina','Siti','Toni'];
-            const competitions = ['Cerdas Cermat','Matematika','Fisika','Kimia','Biologi','Menulis Esai','Debat','Pidato','Melukis','Musik','Olahraga','Robotika'];
-            const activities = ['Olimpiade Sains','Festival Literasi','Kompetisi Matematika','Science Fair','Art Competition','Sports Day','Tech Festival'];
-            pesertaData = [];
-            for (let i = 0; i < 20; i++) {
-                pesertaData.push({ id: i+1, nama: names[i] + ' ' + ['Susanto','Wijaya','Sari','Putra','Hidayat'][i % 5], lomba: competitions[i % competitions.length], kegiatan: activities[i % activities.length], peringkat: ((i % 3) + 1).toString() });
-            }
-            nextId = 21; updateAll(); showNotification('20 data contoh telah ditambahkan');
-        }
-
-        function clearBackground() { appState.stickerBackground = null; elements.backgroundFile.value=''; renderStickers(); showNotification('Background kustom dihapus'); }
-
-        // Events
-        elements.addPesertaBtn.addEventListener('click', handleParticipantForm);
-        ;['namaInput','lombaInput','kegiatanInput','peringkatInput'].forEach(id => { document.getElementById(id).addEventListener('keypress', (e) => { if (e.key === 'Enter') handleParticipantForm(); }); });
-        elements.templatePreviews.addEventListener('click', (e) => {
-            const target = e.target.closest('.template-preview-item'); if (!target) return;
-            appState.currentTemplate = target.dataset.template; renderTemplatePreviews(); renderStickers(); showNotification('Template diubah');
+    /* ── Tabs ── */
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
         });
-        elements.backgroundFile.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0]; if (!file) return;
-            if (!file.type.match('image.*')) { showNotification('Harap pilih file gambar', 'error'); elements.backgroundFile.value=''; return; }
-            const reader = new FileReader();
-            elements.stickerPreview.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center text-center p-8"><div class="spinner mb-4"></div><p class="text-gray-500">Memuat background...</p></div>`;
-            reader.onload = (event) => { appState.stickerBackground = event.target.result; renderStickers(); showNotification('Background kustom berhasil ditambahkan'); };
-            reader.onerror = () => { showNotification('Gagal memuat gambar', 'error'); renderStickers(); };
-            reader.readAsDataURL(file);
-        });
-
-        function onRoundToggleDisableHeight() {
-            elements.stickerHeight.disabled = elements.roundStickerCheckbox.checked;
-            elements.stickerHeight.classList.toggle('opacity-60', elements.stickerHeight.disabled);
-        }
-
-        const inputsToUpdate = [elements.titleInput, elements.instansiInput, elements.textColor, elements.stickerWidth, elements.stickerHeight, elements.roundStickerCheckbox];
-        inputsToUpdate.forEach(input => {
-            input.addEventListener('input', () => {
-                appState.stickerTitle = elements.titleInput.value;
-                appState.instansi = elements.instansiInput.value;
-                appState.textColor = elements.textColor.value;
-                const width = parseFloat(elements.stickerWidth.value);
-                const height = parseFloat(elements.stickerHeight.value);
-                if (isNaN(width) || width < 3 || width > 10) { showNotification('Lebar stiker harus antara 3-10 cm', 'error'); elements.stickerWidth.value = appState.stickerWidth; return; }
-                if (!elements.roundStickerCheckbox.checked && (isNaN(height) || height < 3 || height > 15)) { showNotification('Tinggi stiker harus antara 3-15 cm', 'error'); elements.stickerHeight.value = appState.stickerHeight; return; }
-                appState.stickerWidth = width;
-                appState.isRound = elements.roundStickerCheckbox.checked;
-                appState.stickerHeight = appState.isRound ? appState.stickerHeight : height;
-                onRoundToggleDisableHeight();
-                renderStickers(); updateCssVariables(); showNotification('Pengaturan diperbarui');
-            });
-        });
-
-        elements.clearBgBtn.addEventListener('click', clearBackground);
-        elements.btnPrint.addEventListener('click', confirmPrint);
-        elements.btnAddSample.addEventListener('click', addSampleData);
-        elements.btnAdd20.addEventListener('click', addManySampleData);
-        elements.btnResetAll.addEventListener('click', confirmResetAll);
-
-        function init() {
-            elements.titleInput.value = appState.stickerTitle;
-            elements.instansiInput.value = appState.instansi;
-            elements.textColor.value = appState.textColor;
-            elements.stickerWidth.value = appState.stickerWidth;
-            elements.stickerHeight.value = appState.stickerHeight;
-            elements.roundStickerCheckbox.checked = appState.isRound;
-            elements.titleSize.value = appState.fontSettings.title.size; elements.titleSizeValue.textContent = appState.fontSettings.title.size + 'em'; elements.titleBold.checked = appState.fontSettings.title.bold;
-            elements.participantSize.value = appState.fontSettings.participant.size; elements.participantSizeValue.textContent = appState.fontSettings.participant.size + 'em'; elements.participantBold.checked = appState.fontSettings.participant.bold;
-            elements.competitionSize.value = appState.fontSettings.competition.size; elements.competitionSizeValue.textContent = appState.fontSettings.competition.size + 'em'; elements.competitionBold.checked = appState.fontSettings.competition.bold;
-            elements.instansiSize.value = appState.fontSettings.instansi.size; elements.instansiSizeValue.textContent = appState.fontSettings.instansi.size + 'em'; elements.instansiBold.checked = appState.fontSettings.instansi.bold;
-            renderTemplatePreviews(); addSampleData(); updateCssVariables(); onRoundToggleDisableHeight();
-        }
-        init();
     });
-    </script>
+
+    /* ── Template previews ── */
+    function getCustomGradient() {
+        return `linear-gradient(135deg, ${S.customColor1}, ${S.customColor2})`;
+    }
+
+    function updateCustomPreview() {
+        const grad = getCustomGradient();
+        el.customGradientPreview.style.background = grad;
+        el.customColor1Val.textContent = S.customColor1.toUpperCase();
+        el.customColor2Val.textContent = S.customColor2.toUpperCase();
+    }
+
+    function applyTemplateBackground(sticker) {
+        if (S.currentTemplate === 'tmpl-custom') {
+            sticker.style.background = getCustomGradient();
+        } else {
+            sticker.style.background = '';
+        }
+    }
+
+    function renderTemplates() {
+        el.templatePreviews.innerHTML = TEMPLATES.map(t => {
+            if (t.id === 'tmpl-custom') {
+                return `<div class="tmpl-dot tmpl-custom ${S.currentTemplate === t.id ? 'active' : ''}" data-tmpl="${t.id}" title="${t.label}" style="background:${getCustomGradient()}"></div>`;
+            }
+            return `<div class="tmpl-dot ${t.id} ${S.currentTemplate === t.id ? 'active' : ''}" data-tmpl="${t.id}" title="${t.label}"></div>`;
+        }).join('');
+        updateCustomPreview();
+    }
+    el.templatePreviews.addEventListener('click', e => {
+        const dot = e.target.closest('.tmpl-dot');
+        if (!dot) return;
+        S.currentTemplate = dot.dataset.tmpl;
+        renderTemplates();
+        renderStickers();
+        toast('Template diubah ke ' + TEMPLATES.find(t => t.id === S.currentTemplate).label);
+    });
+
+    function handleCustomColorChange() {
+        S.customColor1 = el.customColor1.value;
+        S.customColor2 = el.customColor2.value;
+        S.currentTemplate = 'tmpl-custom';
+        renderTemplates();
+        renderStickers();
+    }
+    el.customColor1.addEventListener('input', handleCustomColorChange);
+    el.customColor2.addEventListener('input', handleCustomColorChange);
+
+    /* ── Font family ── */
+    function getStickerFontFamily() {
+        if (S.fontFamilyId === 'custom' && S.customFontName) {
+            return `'${S.customFontName}', sans-serif`;
+        }
+        const f = FONTS.find(x => x.id === S.fontFamilyId);
+        return (f && f.family) ? f.family : FONTS[0].family;
+    }
+
+    function getFontFormat(filename) {
+        const ext = filename.split('.').pop().toLowerCase();
+        const map = { ttf: 'truetype', otf: 'opentype', woff: 'woff', woff2: 'woff2' };
+        return map[ext] || 'truetype';
+    }
+
+    function injectCustomFontFace() {
+        let styleEl = document.getElementById('custom-font-style');
+        if (!S.customFontUrl || !S.customFontName) {
+            if (styleEl) styleEl.textContent = '';
+            return;
+        }
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = 'custom-font-style';
+            document.head.appendChild(styleEl);
+        }
+        const fileInput = el.customFontFile.files && el.customFontFile.files[0];
+        const format = fileInput ? getFontFormat(fileInput.name) : 'truetype';
+        styleEl.textContent = `@font-face{font-family:'${S.customFontName}';src:url('${S.customFontUrl}') format('${format}');font-weight:normal;font-style:normal;}`;
+    }
+
+    function updateFontPreview() {
+        const family = getStickerFontFamily();
+        el.fontPreviewText.style.fontFamily = family;
+        el.fontPreviewSub.style.fontFamily = family;
+    }
+
+    function updateCustomFontSection() {
+        const isCustom = S.fontFamilyId === 'custom';
+        el.customFontSection.classList.toggle('hidden', !isCustom);
+    }
+
+    function initFontSelect() {
+        el.fontFamilySelect.innerHTML = FONTS.map(f =>
+            `<option value="${f.id}" ${S.fontFamilyId === f.id ? 'selected' : ''}>${f.name}</option>`
+        ).join('');
+        updateCustomFontSection();
+        updateFontPreview();
+    }
+
+    el.fontFamilySelect.addEventListener('change', () => {
+        S.fontFamilyId = el.fontFamilySelect.value;
+        updateCustomFontSection();
+        updateFontPreview();
+        updateCssVars();
+        renderStickers();
+        const label = FONTS.find(f => f.id === S.fontFamilyId)?.name || 'Font';
+        toast('Font diubah ke ' + label);
+    });
+
+    el.customFontFile.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const validExt = /\.(ttf|otf|woff2?)$/i;
+        if (!validExt.test(file.name)) {
+            toast('Format font: TTF, OTF, WOFF, atau WOFF2', 'error');
+            el.customFontFile.value = '';
+            return;
+        }
+        const fontName = 'CustomFont_' + file.name.replace(/\.[^.]+$/, '').replace(/[^\w-]/g, '_');
+        const reader = new FileReader();
+        reader.onload = ev => {
+            S.customFontName = fontName;
+            S.customFontUrl = ev.target.result;
+            S.fontFamilyId = 'custom';
+            el.fontFamilySelect.value = 'custom';
+            el.customFontFileName.textContent = file.name;
+            injectCustomFontFace();
+            updateCustomFontSection();
+            updateFontPreview();
+            updateCssVars();
+            renderStickers();
+            toast('Font custom berhasil dimuat');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    el.clearCustomFontBtn.addEventListener('click', () => {
+        S.customFontName = null;
+        S.customFontUrl = null;
+        el.customFontFile.value = '';
+        el.customFontFileName.textContent = 'Upload .ttf / .otf / .woff';
+        injectCustomFontFace();
+        if (S.fontFamilyId === 'custom') {
+            S.fontFamilyId = 'plus-jakarta';
+            el.fontFamilySelect.value = 'plus-jakarta';
+        }
+        updateCustomFontSection();
+        updateFontPreview();
+        updateCssVars();
+        renderStickers();
+        toast('Font custom dihapus');
+    });
+
+    /* ── CSS variables ── */
+    function updateCssVars() {
+        const root = document.documentElement.style;
+        const w = S.stickerWidth * 10;
+        const h = (S.isRound ? S.stickerWidth : S.stickerHeight) * 10;
+        root.setProperty('--sticker-width',        w + 'mm');
+        root.setProperty('--sticker-height',       h + 'mm');
+        root.setProperty('--sticker-border-radius', S.isRound ? '50%' : '8px');
+        root.setProperty('--sticker-text-color',   S.textColor);
+        root.setProperty('--sticker-font-family',  getStickerFontFamily());
+        root.setProperty('--title-font-size',  S.font.title.size + 'em');
+        root.setProperty('--title-font-weight',S.font.title.bold  ? 'bold' : 'normal');
+        root.setProperty('--name-font-size',   S.font.name.size  + 'em');
+        root.setProperty('--name-font-weight', S.font.name.bold   ? 'bold' : 'normal');
+        root.setProperty('--comp-font-size',   S.font.comp.size  + 'em');
+        root.setProperty('--comp-font-weight', S.font.comp.bold   ? 'bold' : 'normal');
+        root.setProperty('--inst-font-size',   S.font.inst.size  + 'em');
+        root.setProperty('--inst-font-weight', S.font.inst.bold   ? 'bold' : 'normal');
+    }
+
+    /* ── Build single sticker DOM ── */
+    function buildSticker(p, forPrint = false) {
+        const sticker = document.createElement('div');
+        const useRoundImage = S.isRound && S.roundImage;
+        const imageOnly = useRoundImage && S.hideText;
+        const tmplClass = S.currentTemplate === 'tmpl-custom' ? '' : S.currentTemplate;
+        let cls = `sticker ${tmplClass}${S.isRound ? ' round' : ''}`.trim();
+        if (useRoundImage) cls += ' has-round-image';
+        if (imageOnly) cls += ' image-only';
+        sticker.className = cls;
+        applyTemplateBackground(sticker);
+
+        const w = S.stickerWidth;
+        const h = S.isRound ? w : S.stickerHeight;
+        if (forPrint) {
+            // print: CSS vars handle dimensions
+        } else {
+            sticker.style.width  = w + 'cm';
+            sticker.style.height = h + 'cm';
+            sticker.style.minWidth  = '80px';
+            sticker.style.minHeight = '80px';
+            sticker.style.borderRadius = S.isRound ? '50%' : '10px';
+        }
+        sticker.style.color = S.textColor;
+        if (S.stickerBackground && !imageOnly) sticker.style.backgroundImage = `url(${S.stickerBackground})`;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'sticker-overlay';
+        overlay.style.fontFamily = getStickerFontFamily();
+
+        if (imageOnly) {
+            const img = document.createElement('img');
+            img.className = 'sticker-round-img';
+            img.src = S.roundImage;
+            img.alt = 'Stiker bulat';
+            overlay.appendChild(img);
+            sticker.appendChild(overlay);
+            return sticker;
+        }
+
+        // Gambar stiker bulat (dengan teks)
+        if (useRoundImage) {
+            const imgWrap = document.createElement('div');
+            imgWrap.className = 'sticker-round-img-wrap';
+            const img = document.createElement('img');
+            img.src = S.roundImage;
+            img.alt = 'Gambar stiker';
+            imgWrap.appendChild(img);
+            overlay.appendChild(imgWrap);
+        } else if (S.logoImage) {
+            const logoWrap = document.createElement('div');
+            logoWrap.className = 'sticker-logo-wrap';
+            const img = document.createElement('img');
+            img.src = S.logoImage;
+            img.alt = 'Logo';
+            logoWrap.appendChild(img);
+            overlay.appendChild(logoWrap);
+        }
+
+        if (!S.hideText || !S.isRound) {
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 's-title';
+            titleDiv.textContent = `${S.stickerTitle} ${p.peringkat}`;
+            titleDiv.style.fontSize   = S.font.title.size + 'em';
+            titleDiv.style.fontWeight = S.font.title.bold ? 'bold' : 'normal';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 's-name';
+            nameDiv.textContent = p.nama;
+            nameDiv.style.fontSize   = S.font.name.size + 'em';
+            nameDiv.style.fontWeight = S.font.name.bold ? 'bold' : 'normal';
+
+            const compDiv = document.createElement('div');
+            compDiv.className = 's-comp';
+            compDiv.innerHTML = `<div>${p.lomba}</div><div>${p.kegiatan}</div>`;
+            compDiv.style.fontSize   = S.font.comp.size + 'em';
+            compDiv.style.fontWeight = S.font.comp.bold ? 'bold' : 'normal';
+
+            overlay.append(titleDiv, nameDiv, compDiv);
+
+            if (S.instansi) {
+                const instDiv = document.createElement('div');
+                instDiv.className = 's-inst';
+                instDiv.textContent = S.instansi;
+                instDiv.style.fontSize   = S.font.inst.size + 'em';
+                instDiv.style.fontWeight = S.font.inst.bold ? 'bold' : 'normal';
+                overlay.appendChild(instDiv);
+            }
+        }
+
+        sticker.appendChild(overlay);
+        return sticker;
+    }
+
+    /* ── Render preview ── */
+    function renderStickers() {
+        el.previewWrap.innerHTML = '';
+        if (pesertaData.length === 0) {
+            el.previewWrap.innerHTML = `
+                <div style="width:100%;text-align:center;padding:32px 0;color:#94A3B8;">
+                    <i class="fas fa-image" style="font-size:2rem;display:block;margin-bottom:8px;color:#CBD5E1;"></i>
+                    Tambahkan peserta untuk melihat preview
+                </div>`;
+            el.previewCount.textContent = '';
+            el.printInfo.classList.add('hidden');
+            return;
+        }
+        pesertaData.forEach(p => el.previewWrap.appendChild(buildSticker(p)));
+        el.previewCount.textContent = pesertaData.length + ' stiker';
+        updatePrintInfo();
+    }
+
+    /* ── Table ── */
+    function renderTable() {
+        el.pesertaTableBody.innerHTML = '';
+        if (pesertaData.length === 0) { el.noDataMessage.classList.remove('hidden'); return; }
+        el.noDataMessage.classList.add('hidden');
+        pesertaData.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="font-semibold text-slate-800">${escHtml(p.nama)}</td>
+                <td>
+                    <div class="text-slate-700">${escHtml(p.lomba)}</div>
+                    <div class="text-xs text-slate-400">${escHtml(p.kegiatan)}</div>
+                </td>
+                <td><span class="rank-badge">${escHtml(p.peringkat)}</span></td>
+                <td class="text-center">
+                    <div style="display:inline-flex;gap:6px;">
+                        <button onclick="window.appEdit(${p.id})" class="btn btn-secondary !p-1.5 !text-xs" title="Edit"><i class="fas fa-pen"></i></button>
+                        <button onclick="window.appDel(${p.id})"  class="btn btn-danger  !p-1.5 !text-xs" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>`;
+            el.pesertaTableBody.appendChild(tr);
+        });
+    }
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    window.appEdit = function(id) {
+        const p = pesertaData.find(x => x.id === id); if (!p) return;
+        editId = id;
+        el.namaInput.value = p.nama;
+        el.lombaInput.value = p.lomba;
+        el.kegiatanInput.value = p.kegiatan;
+        el.peringkatInput.value = p.peringkat;
+        el.addBtnText.textContent = 'Update';
+        el.addPesertaBtn.style.background = '#D97706';
+        el.addPesertaBtn.style.boxShadow = '0 2px 8px rgba(217,119,6,0.3)';
+        el.namaInput.focus();
+        el.namaInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    window.appDel = function(id) {
+        showModal('Hapus Peserta', 'Hapus data peserta ini?', () => {
+            pesertaData = pesertaData.filter(p => p.id !== id);
+            updateAll();
+            toast('Data peserta dihapus');
+        });
+    };
+
+    function clearForm() {
+        el.namaInput.value = '';
+        el.lombaInput.value = '';
+        el.kegiatanInput.value = '';
+        el.peringkatInput.value = '';
+        editId = null;
+        el.addBtnText.textContent = 'Tambah';
+        el.addPesertaBtn.style.background = '';
+        el.addPesertaBtn.style.boxShadow = '';
+    }
+
+    function handleForm() {
+        const nama = el.namaInput.value.trim();
+        const lomba = el.lombaInput.value.trim();
+        const kegiatan = el.kegiatanInput.value.trim();
+        const peringkat = el.peringkatInput.value.trim();
+        if (!nama || !lomba || !kegiatan || !peringkat) {
+            showModal('Data Tidak Lengkap', 'Mohon isi semua kolom data peserta.', null, true);
+            return;
+        }
+        if (editId) {
+            const idx = pesertaData.findIndex(p => p.id === editId);
+            if (idx > -1) pesertaData[idx] = { ...pesertaData[idx], nama, lomba, kegiatan, peringkat };
+            toast('Peserta diperbarui');
+        } else {
+            pesertaData.push({ id: nextId++, nama, lomba, kegiatan, peringkat });
+            toast('Peserta ditambahkan');
+        }
+        clearForm();
+        updateAll();
+        el.namaInput.focus();
+    }
+
+    /* ── Print ── */
+    function computeLayout() {
+        const wMm = S.stickerWidth * 10;
+        const hMm = (S.isRound ? S.stickerWidth : S.stickerHeight) * 10;
+        const avW = 210 - 6;
+        const avH = 297 - 6;
+        const cols = Math.max(1, Math.floor(avW / (wMm + 2)));
+        const rows = Math.max(1, Math.floor(avH / (hMm + 2)));
+        return { perPage: Math.max(1, cols * rows) };
+    }
+
+    function updatePrintInfo() {
+        if (pesertaData.length === 0) { el.printInfo.classList.add('hidden'); return; }
+        const { perPage } = computeLayout();
+        const pages = Math.ceil(pesertaData.length / perPage);
+        el.printInfoText.textContent = `${pesertaData.length} stiker → ${pages} halaman (${perPage}/halaman)`;
+        el.printInfo.classList.remove('hidden');
+    }
+
+    function preparePrint() {
+        updateCssVars();
+        const pc = document.querySelector('.print-container');
+        pc.innerHTML = '';
+        const { perPage } = computeLayout();
+        for (let i = 0; i < pesertaData.length; i += perPage) {
+            const page = document.createElement('div');
+            page.className = 'print-page';
+            const area = document.createElement('div');
+            area.className = 'sticker-print-area';
+            pesertaData.slice(i, i + perPage).forEach(p => area.appendChild(buildSticker(p, true)));
+            page.appendChild(area);
+            pc.appendChild(page);
+        }
+        window.print();
+        setTimeout(() => { pc.innerHTML = ''; }, 1500);
+        toast('Mempersiapkan cetakan…');
+    }
+
+    function confirmPrint() {
+        if (pesertaData.length === 0) {
+            showModal('Tidak Ada Data', 'Tambahkan data peserta sebelum mencetak.', null, true);
+            return;
+        }
+        const { perPage } = computeLayout();
+        const pages = Math.ceil(pesertaData.length / perPage);
+        showModal('Cetak Stiker',
+            `${pesertaData.length} stiker akan dicetak dalam ${pages} halaman. Lanjutkan?`,
+            preparePrint);
+    }
+
+    /* ── Sample data ── */
+    function addSample() {
+        pesertaData = [
+            { id: nextId++, nama: 'Ahmad Fauzi',  lomba: 'Cerdas Cermat', kegiatan: 'Olimpiade Sains',   peringkat: '1' },
+            { id: nextId++, nama: 'Budi Santoso', lomba: 'Matematika',     kegiatan: 'Olimpiade Sains',   peringkat: '2' },
+            { id: nextId++, nama: 'Citra Dewi',   lomba: 'Menulis Esai',   kegiatan: 'Festival Literasi', peringkat: '1' },
+        ];
+        updateAll();
+        toast('Data contoh ditambahkan');
+    }
+
+    function add20() {
+        const names = ['Ahmad','Budi','Citra','Diana','Eko','Fajar','Gita','Hadi','Indra','Julia','Karina','Lukman','Maya','Nina','Omar','Putri','Qori','Rina','Siti','Toni'];
+        const surnames = ['Susanto','Wijaya','Sari','Putra','Hidayat'];
+        const comps = ['Matematika','Fisika','Kimia','Biologi','Menulis Esai','Debat','Pidato','Melukis','Robotika'];
+        const acts = ['Olimpiade Sains','Festival Literasi','Science Fair','Art Competition','Tech Festival'];
+        pesertaData = [];
+        nextId = 1;
+        for (let i = 0; i < 20; i++) {
+            pesertaData.push({ id: nextId++, nama: `${names[i]} ${surnames[i%5]}`, lomba: comps[i%comps.length], kegiatan: acts[i%acts.length], peringkat: String((i%3)+1) });
+        }
+        updateAll();
+        toast('20 data contoh ditambahkan');
+    }
+
+    function resetAll() {
+        showModal('Reset Semua', 'Semua data peserta akan dihapus. Yakin?', () => {
+            pesertaData = []; nextId = 1; clearForm(); updateAll(); toast('Semua data direset');
+        });
+    }
+
+    /* ── Font settings ── */
+    function readFontSettings() {
+        S.font.title.size  = parseFloat(el.titleSize.value);
+        S.font.title.bold  = el.titleBold.checked;
+        S.font.name.size   = parseFloat(el.participantSize.value);
+        S.font.name.bold   = el.participantBold.checked;
+        S.font.comp.size   = parseFloat(el.competitionSize.value);
+        S.font.comp.bold   = el.competitionBold.checked;
+        S.font.inst.size   = parseFloat(el.instansiSize.value);
+        S.font.inst.bold   = el.instansiBold.checked;
+    }
+
+    /* ── Logo handling ── */
+    el.logoFile.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { toast('Harap pilih file gambar', 'error'); return; }
+        const reader = new FileReader();
+        reader.onload = ev => {
+            S.logoImage = ev.target.result;
+            showImagePreview(el.logoPreviewArea, el.logoPreviewImg, S.logoImage);
+            renderStickers();
+            updateCssVars();
+            toast('Logo berhasil ditambahkan');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    el.clearLogoBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        S.logoImage = null;
+        el.logoFile.value = '';
+        hideImagePreview(el.logoPreviewArea, el.logoPreviewImg);
+        renderStickers();
+        toast('Logo dihapus');
+    });
+
+    /* ── Background handling ── */
+    el.backgroundFile.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { toast('Harap pilih file gambar', 'error'); el.backgroundFile.value=''; return; }
+        el.bgFileName.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            S.stickerBackground = ev.target.result;
+            renderStickers();
+            toast('Background ditambahkan');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    el.clearBgBtn.addEventListener('click', () => {
+        S.stickerBackground = null;
+        el.backgroundFile.value = '';
+        el.bgFileName.textContent = 'Pilih gambar…';
+        renderStickers();
+        toast('Background dihapus');
+    });
+
+    /* ── Round sticker image ── */
+    el.roundImageFile.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { toast('Harap pilih file gambar', 'error'); return; }
+        const reader = new FileReader();
+        reader.onload = ev => {
+            S.roundImage = ev.target.result;
+            showImagePreview(el.roundImagePreviewArea, el.roundImagePreviewImg, S.roundImage);
+            renderStickers();
+            toast('Gambar stiker bulat ditambahkan');
+        };
+        reader.readAsDataURL(file);
+    });
+
+    el.clearRoundImageBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        S.roundImage = null;
+        el.roundImageFile.value = '';
+        hideImagePreview(el.roundImagePreviewArea, el.roundImagePreviewImg);
+        renderStickers();
+        toast('Gambar stiker bulat dihapus');
+    });
+
+    function updateRoundOptionsVisibility() {
+        if (S.isRound) {
+            el.roundStickerOptions.classList.remove('hidden');
+        } else {
+            el.roundStickerOptions.classList.add('hidden');
+            S.hideText = false;
+            el.hideTextCb.checked = false;
+        }
+    }
+
+    /* ── Wire up all inputs ── */
+    function syncState() {
+        S.stickerTitle = el.titleInput.value;
+        S.instansi = el.instansiInput.value;
+        S.textColor = el.textColor.value;
+        const w = parseFloat(el.stickerWidth.value);
+        const h = parseFloat(el.stickerHeight.value);
+        if (!isNaN(w) && w >= 3 && w <= 10) S.stickerWidth = w;
+        S.isRound = el.roundStickerCb.checked;
+        S.hideText = S.isRound && el.hideTextCb.checked;
+        if (!S.isRound && !isNaN(h) && h >= 3 && h <= 15) S.stickerHeight = h;
+        el.stickerHeight.disabled = S.isRound;
+        el.stickerHeight.style.opacity = S.isRound ? '0.45' : '';
+        updateRoundOptionsVisibility();
+        readFontSettings();
+        updateCssVars();
+        renderStickers();
+    }
+
+    [el.titleInput, el.instansiInput, el.textColor, el.stickerWidth, el.stickerHeight, el.roundStickerCb, el.hideTextCb].forEach(inp =>
+        inp.addEventListener('input', syncState)
+    );
+    el.roundStickerCb.addEventListener('change', syncState);
+    el.hideTextCb.addEventListener('change', syncState);
+
+    [el.titleSize, el.titleBold, el.participantSize, el.participantBold,
+     el.competitionSize, el.competitionBold, el.instansiSize, el.instansiBold].forEach(inp => {
+        inp.addEventListener('input', () => {
+            el.titleSizeVal.textContent        = el.titleSize.value + 'em';
+            el.participantSizeVal.textContent  = el.participantSize.value + 'em';
+            el.competitionSizeVal.textContent  = el.competitionSize.value + 'em';
+            el.instansiSizeVal.textContent     = el.instansiSize.value + 'em';
+            syncState();
+        });
+    });
+
+    el.addPesertaBtn.addEventListener('click', handleForm);
+    ['namaInput','lombaInput','kegiatanInput','peringkatInput'].forEach(id =>
+        $(id).addEventListener('keypress', e => { if (e.key === 'Enter') handleForm(); })
+    );
+    el.btnPrint.addEventListener('click', confirmPrint);
+    el.btnAddSample.addEventListener('click', addSample);
+    el.btnAdd20.addEventListener('click', add20);
+    el.btnResetAll.addEventListener('click', resetAll);
+
+    /* ── Master update ── */
+    function updateAll() { renderTable(); renderStickers(); updateCssVars(); }
+
+    /* ── Init ── */
+    initFontSelect();
+    renderTemplates();
+    updateCssVars();
+    addSample();
+});
+</script>
 </body>
 </html>
