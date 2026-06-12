@@ -340,29 +340,60 @@
         .sticker.round .sticker-overlay { border-radius: 50%; }
         .sticker.round.image-only .sticker-overlay {
             background: transparent;
-            padding: 0;
+            padding: 9%;
+            box-sizing: border-box;
         }
-        .sticker-round-img {
+        .sticker-round-img-center {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+        }
+        .sticker-round-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center center;
             display: block;
         }
+        .sticker.round.has-round-image:not(.image-only) .sticker-overlay {
+            padding: 7%;
+            box-sizing: border-box;
+            justify-content: center;
+        }
         .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap {
-            width: 42%;
+            width: 38%;
+            max-width: 38%;
             aspect-ratio: 1;
             border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             flex-shrink: 0;
             background: rgba(255,255,255,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap img {
+            max-width: 100%;
+            max-height: 100%;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
+            object-fit: contain;
+            object-position: center center;
+        }
+        .sticker.round.has-round-image:not(.image-only) .s-title,
+        .sticker.round.has-round-image:not(.image-only) .s-name,
+        .sticker.round.has-round-image:not(.image-only) .s-comp,
+        .sticker.round.has-round-image:not(.image-only) .s-inst {
+            max-width: 100%;
+            flex-shrink: 1;
+            min-width: 0;
         }
         .sticker-logo-wrap {
             width: 28%;
@@ -576,15 +607,18 @@
                 margin-bottom: 2mm !important;
             }
             .sticker-logo-wrap img { width: 100% !important; height: 100% !important; object-fit: contain !important; border-radius: 50% !important; }
-            .sticker.round.image-only .sticker-overlay { background: transparent !important; padding: 0 !important; }
-            .sticker-round-img { width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 50% !important; display: block !important; }
+            .sticker.round.image-only .sticker-overlay { background: transparent !important; padding: 9% !important; box-sizing: border-box !important; }
+            .sticker-round-img-center { width: 100% !important; height: 100% !important; display: flex !important; align-items: center !important; justify-content: center !important; }
+            .sticker-round-img { max-width: 100% !important; max-height: 100% !important; width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center center !important; display: block !important; }
+            .sticker.round.has-round-image:not(.image-only) .sticker-overlay { padding: 7% !important; box-sizing: border-box !important; justify-content: center !important; }
             .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap {
-                width: 42% !important; aspect-ratio: 1 !important; border-radius: 50% !important;
-                overflow: hidden !important; margin-bottom: 2mm !important; flex-shrink: 0 !important;
-                background: rgba(255,255,255,0.18) !important;
+                width: 38% !important; max-width: 38% !important; aspect-ratio: 1 !important; border-radius: 50% !important;
+                overflow: hidden !important; margin-bottom: 1.5mm !important; flex-shrink: 0 !important;
+                background: rgba(255,255,255,0.18) !important; display: flex !important; align-items: center !important; justify-content: center !important;
             }
             .sticker.round.has-round-image:not(.image-only) .sticker-round-img-wrap img {
-                width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: 50% !important;
+                max-width: 100% !important; max-height: 100% !important; width: 100% !important; height: 100% !important;
+                object-fit: contain !important; object-position: center center !important;
             }
             .sticker .s-title { font-family: var(--sticker-font-family) !important; font-size: var(--title-font-size) !important; font-weight: var(--title-font-weight) !important; color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.15 !important; }
             .sticker .s-name  { font-family: var(--sticker-font-family) !important; font-size: var(--name-font-size) !important;  font-weight: var(--name-font-weight) !important;  color: var(--sticker-text-color) !important; text-align: center !important; line-height: 1.2 !important; }
@@ -892,7 +926,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-xs font-semibold text-slate-700">Gambar aktif</p>
-                                <p class="text-xs text-slate-400">Mengisi lingkaran stiker</p>
+                                <p class="text-xs text-slate-400">Tengah, tidak terpotong</p>
                             </div>
                         </div>
                         <div class="image-options-grid">
@@ -904,7 +938,7 @@
                             <label class="upload-zone compact" for="roundImageFile">
                                 <i class="fas fa-circle-dot text-indigo-300"></i>
                                 <p class="font-semibold text-slate-600">Upload Gambar</p>
-                                <p class="text-slate-400">PNG/JPG persegi</p>
+                                <p class="text-slate-400">PNG/JPG — auto center</p>
                                 <input type="file" id="roundImageFile" accept="image/*" />
                             </label>
                         </div>
@@ -1343,11 +1377,14 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.fontFamily = getStickerFontFamily();
 
         if (imageOnly) {
+            const imgCenter = document.createElement('div');
+            imgCenter.className = 'sticker-round-img-center';
             const img = document.createElement('img');
             img.className = 'sticker-round-img';
             img.src = S.roundImage;
             img.alt = 'Stiker bulat';
-            overlay.appendChild(img);
+            imgCenter.appendChild(img);
+            overlay.appendChild(imgCenter);
             sticker.appendChild(overlay);
             return sticker;
         }
