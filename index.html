@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pro StickerGen</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS library -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Bebas+Neue&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
+        /* ... (style sama persis seperti kode sebelumnya) ... */
         :root {
             --brand: #4F46E5;
             --brand-light: #EEF2FF;
@@ -36,7 +39,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
 
-        /* ── Templates ── */
         .tmpl-gold    { background: linear-gradient(135deg, #F59E0B, #DC2626); }
         .tmpl-ocean   { background: linear-gradient(135deg, #0EA5E9, #3B82F6); }
         .tmpl-purple  { background: linear-gradient(135deg, #7C3AED, #4338CA); }
@@ -46,7 +48,6 @@
         .tmpl-slate   { background: linear-gradient(135deg, #475569, #1E293B); }
         .tmpl-teal    { background: linear-gradient(135deg, #14B8A6, #0891B2); }
 
-        /* ── Card ── */
         .card {
             background: var(--surface);
             border-radius: var(--radius);
@@ -72,7 +73,6 @@
             border-radius: 99px;
         }
 
-        /* ── Inputs ── */
         .field-label {
             display: block;
             font-size: 0.75rem;
@@ -99,7 +99,6 @@
             box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
         }
 
-        /* ── Buttons ── */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -137,7 +136,6 @@
         }
         .btn-print:hover { opacity: 0.93; transform: translateY(-1px); }
 
-        /* ── Template picker ── */
         .tmpl-dot {
             width: 34px;
             height: 34px;
@@ -188,8 +186,18 @@
             margin-top: 8px;
             border: 1px solid var(--border);
         }
+        .solid-preset {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+        .solid-preset:hover { transform: scale(1.15); }
+        .solid-preset.active { border-color: var(--brand); box-shadow: 0 0 0 2px rgba(79,70,229,0.2); }
 
-        /* ── Font slider ── */
         .slider-group {
             background: var(--surface-2);
             border: 1px solid var(--border);
@@ -235,7 +243,6 @@
         }
         .font-preview-box span { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-sub); margin-top: 4px; }
 
-        /* ── Upload area ── */
         .upload-zone {
             border: 2px dashed var(--border);
             border-radius: 10px;
@@ -282,7 +289,6 @@
             border-radius: 9px;
         }
 
-        /* ── Logo preview ── */
         .logo-preview-wrap {
             position: relative;
             display: inline-block;
@@ -312,7 +318,6 @@
             font-size: 9px;
         }
 
-        /* ── Sticker ── */
         .sticker {
             color: white;
             background-size: cover;
@@ -443,7 +448,6 @@
             margin-top: 2px;
         }
 
-        /* ── Table ── */
         .data-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
         .data-table th {
             background: var(--surface-2);
@@ -472,7 +476,6 @@
             color: var(--brand);
         }
 
-        /* ── Modal ── */
         .modal-backdrop {
             position: fixed; inset: 0;
             background: rgba(15,23,42,0.55);
@@ -494,7 +497,6 @@
         }
         .modal-backdrop.open .modal-box { transform: scale(1); }
 
-        /* ── Toast ── */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -517,7 +519,6 @@
         .toast.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
         .toast.error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
 
-        /* ── Preview area ── */
         #stickerPreviewWrap {
             background: #F1F5F9;
             border-radius: 12px;
@@ -529,7 +530,6 @@
             align-content: flex-start;
         }
 
-        /* ── Info badge ── */
         .info-badge {
             background: var(--brand-light);
             color: var(--brand);
@@ -543,7 +543,6 @@
             line-height: 1.4;
         }
 
-        /* ── Print styles ── */
         @media print {
             body > *:not(.print-container) { display: none !important; }
             .print-container {
@@ -628,13 +627,11 @@
             html, body { margin: 0 !important; padding: 0 !important; }
         }
 
-        /* ── Responsive ── */
         @media (max-width: 640px) {
             .toast { bottom: 16px; right: 16px; left: 16px; max-width: none; }
             .modal-box { padding: 20px; }
         }
 
-        /* Tab system */
         .tab-btn {
             flex: 1;
             padding: 8px;
@@ -655,7 +652,6 @@
 </head>
 <body>
     <div id="app" class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 sm:py-10">
-
         <!-- Header -->
         <header class="text-center mb-8 sm:mb-12">
             <div class="inline-flex items-center gap-2 bg-white border border-indigo-100 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest text-indigo-500 uppercase mb-4 shadow-sm">
@@ -665,13 +661,10 @@
             <p class="text-slate-500 mt-2 text-sm sm:text-base max-w-lg mx-auto">Desain profesional dengan logo, template, dan kontrol penuh ukuran cetak A4.</p>
         </header>
 
-        <!-- Layout grid: left wide, right sidebar -->
         <div class="grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-6">
-
             <!-- LEFT COLUMN -->
             <div class="space-y-5">
-
-                <!-- Tab navigation (mobile-friendly) -->
+                <!-- Tab navigation -->
                 <div class="card overflow-hidden">
                     <div class="flex border-b border-slate-100 px-4">
                         <button class="tab-btn active" data-tab="general"><i class="fas fa-cog mr-1.5"></i>Umum</button>
@@ -696,7 +689,6 @@
                     <!-- Tab: Design -->
                     <div class="tab-panel p-5" id="tab-design">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <!-- Left: template + color -->
                             <div class="space-y-4">
                                 <div>
                                     <p class="section-title">Template Warna</p>
@@ -719,6 +711,11 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <input type="checkbox" id="solidColorCheckbox" class="w-4 h-4 accent-indigo-600" />
+                                            <label for="solidColorCheckbox" class="text-xs font-semibold text-slate-700">Warna Solid (1 warna cerah)</label>
+                                        </div>
+                                        <div id="solidPresets" class="flex flex-wrap gap-2 mt-2"></div>
                                         <div id="customGradientPreview" class="custom-gradient-preview"></div>
                                     </div>
                                 </div>
@@ -730,7 +727,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Right: logo + background -->
                             <div class="space-y-3">
                                 <p class="section-title">Gambar & Logo</p>
                                 <div id="logoPreviewArea" class="hidden image-preview-compact">
@@ -862,17 +858,25 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2 mb-5">
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
                         <button id="addPesertaBtn" class="btn btn-primary">
                             <i class="fas fa-plus-circle"></i>
                             <span id="addBtnText">Tambah</span>
                         </button>
                         <button id="btnAddSample" class="btn btn-secondary"><i class="fas fa-vial"></i> Contoh</button>
                         <button id="btnAdd20" class="btn btn-purple"><i class="fas fa-layer-group"></i> 20 Data</button>
-                        <button id="btnResetAll" class="btn btn-danger ml-auto"><i class="fas fa-trash-alt"></i> Reset</button>
+                        <button id="btnResetAll" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Reset</button>
                     </div>
 
-                    <!-- Table (scrollable on mobile) -->
+                    <!-- Import/Export Row -->
+                    <div class="flex flex-wrap items-center gap-2 mb-5 pt-3 border-t border-slate-100">
+                        <button id="btnDownloadTemplate" class="btn btn-secondary"><i class="fas fa-download"></i> Template</button>
+                        <button id="btnImportXlsx" class="btn btn-secondary"><i class="fas fa-file-import"></i> Import XLSX</button>
+                        <button id="btnExportXlsx" class="btn btn-secondary"><i class="fas fa-file-export"></i> Export XLSX</button>
+                        <input type="file" id="importFileInput" accept=".xlsx,.xls" class="hidden" />
+                    </div>
+
+                    <!-- Table -->
                     <div class="overflow-x-auto rounded-xl border border-slate-100">
                         <table class="data-table">
                             <thead>
@@ -895,7 +899,6 @@
 
             <!-- RIGHT SIDEBAR -->
             <div class="space-y-5">
-
                 <!-- Print settings -->
                 <div class="card p-5">
                     <p class="section-title"><i class="fas fa-print text-indigo-400"></i>Pengaturan Cetak</p>
@@ -906,7 +909,7 @@
                         </div>
                         <div>
                             <label class="field-label">Tinggi (cm)</label>
-                            <input type="number" id="stickerHeight" value="6" min="3" max="15" step="0.1" class="field-input" id="heightInput" />
+                            <input type="number" id="stickerHeight" value="6" min="3" max="15" step="0.1" class="field-input" />
                         </div>
                     </div>
                     <label class="flex items-center gap-2.5 cursor-pointer mt-3 p-2.5 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-colors select-none">
@@ -916,7 +919,6 @@
                             <p class="text-xs text-slate-400 leading-tight">Tinggi = Lebar secara otomatis</p>
                         </div>
                     </label>
-
                     <div id="roundStickerOptions" class="hidden mt-2 border-l-2 border-indigo-100 ml-2.5 pl-3">
                         <p class="field-label mb-2">Gambar Stiker Bulat</p>
                         <div id="roundImagePreviewArea" class="hidden image-preview-compact mb-2">
@@ -943,17 +945,14 @@
                             </label>
                         </div>
                     </div>
-
                     <div class="info-badge mt-3">
                         <i class="fas fa-circle-info mt-0.5 flex-shrink-0"></i>
                         <span>Ukuran stiker dipertahankan persis saat cetak di kertas A4.</span>
                     </div>
-
                     <div id="printInfo" class="info-badge mt-2 hidden" style="background:#F0FDF4;color:#166534;border:1px solid #BBF7D0;">
                         <i class="fas fa-file-lines mt-0.5 flex-shrink-0"></i>
                         <span id="printInfoText"></span>
                     </div>
-
                     <button id="btnPrint" class="btn btn-print mt-4">
                         <i class="fas fa-print"></i> CETAK STIKER
                     </button>
@@ -975,7 +974,7 @@
         </footer>
     </div>
 
-    <!-- Print container (hidden) -->
+    <!-- Print container -->
     <div class="print-container" style="display:none;"></div>
 
     <!-- Modal -->
@@ -998,7 +997,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    /* ── State ── */
     let pesertaData = [];
     let nextId = 1;
     let editId = null;
@@ -1009,6 +1007,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTemplate: 'tmpl-gold',
         customColor1: '#4F46E5',
         customColor2: '#7C3AED',
+        isSolid: false,
         textColor: '#ffffff',
         stickerBackground: null,
         logoImage: null,
@@ -1053,6 +1052,17 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'tmpl-custom',  label: 'Custom' },
     ];
 
+    const SOLID_PRESETS = [
+        { label: 'Merah', color: '#FF3333' },
+        { label: 'Oranye', color: '#FF8800' },
+        { label: 'Kuning', color: '#FFD700' },
+        { label: 'Hijau', color: '#33CC33' },
+        { label: 'Biru', color: '#3399FF' },
+        { label: 'Ungu', color: '#9933FF' },
+        { label: 'Pink', color: '#FF33CC' },
+        { label: 'Tosca', color: '#00CCCC' },
+    ];
+
     const $ = id => document.getElementById(id);
 
     const el = {
@@ -1063,6 +1073,8 @@ document.addEventListener('DOMContentLoaded', function() {
         customColor2:       $('customColor2'),
         customColor1Val:    $('customColor1Val'),
         customColor2Val:    $('customColor2Val'),
+        solidCb:            $('solidColorCheckbox'),
+        solidPresets:       $('solidPresets'),
         customGradientPreview: $('customGradientPreview'),
         textColor:          $('textColor'),
         logoFile:           $('logoFile'),
@@ -1105,6 +1117,10 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAddSample:       $('btnAddSample'),
         btnAdd20:           $('btnAdd20'),
         btnResetAll:        $('btnResetAll'),
+        btnDownloadTemplate: $('btnDownloadTemplate'),
+        btnImportXlsx:      $('btnImportXlsx'),
+        btnExportXlsx:      $('btnExportXlsx'),
+        importFileInput:    $('importFileInput'),
         titleSize:          $('titleSize'),
         titleSizeVal:       $('titleSizeValue'),
         titleBold:          $('titleBold'),
@@ -1138,7 +1154,6 @@ document.addEventListener('DOMContentLoaded', function() {
         area.style.removeProperty('display');
     }
 
-    /* ── Toast ── */
     let toastTimer;
     function toast(msg, type = 'success') {
         el.toastMessage.textContent = msg;
@@ -1149,7 +1164,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toastTimer = setTimeout(() => el.toast.classList.remove('show'), 2200);
     }
 
-    /* ── Modal ── */
     let confirmCb = null;
     function showModal(title, msg, onConfirm, hideConfirmBtn = false) {
         el.modalTitle.textContent = title;
@@ -1164,7 +1178,6 @@ document.addEventListener('DOMContentLoaded', function() {
     el.modalCancel.addEventListener('click', hideModal);
     el.modal.addEventListener('click', e => { if (e.target === el.modal) hideModal(); });
 
-    /* ── Tabs ── */
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1174,8 +1187,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    /* ── Template previews ── */
     function getCustomGradient() {
+        if (S.isSolid) return S.customColor1;
         return `linear-gradient(135deg, ${S.customColor1}, ${S.customColor2})`;
     }
 
@@ -1197,16 +1210,50 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderTemplates() {
         el.templatePreviews.innerHTML = TEMPLATES.map(t => {
             if (t.id === 'tmpl-custom') {
-                return `<div class="tmpl-dot tmpl-custom ${S.currentTemplate === t.id ? 'active' : ''}" data-tmpl="${t.id}" title="${t.label}" style="background:${getCustomGradient()}"></div>`;
+                const bg = getCustomGradient();
+                return `<div class="tmpl-dot tmpl-custom ${S.currentTemplate === t.id ? 'active' : ''}" data-tmpl="${t.id}" title="${t.label}" style="background:${bg}"></div>`;
             }
             return `<div class="tmpl-dot ${t.id} ${S.currentTemplate === t.id ? 'active' : ''}" data-tmpl="${t.id}" title="${t.label}"></div>`;
         }).join('');
         updateCustomPreview();
+        renderSolidPresets();
     }
+
+    function renderSolidPresets() {
+        el.solidPresets.innerHTML = SOLID_PRESETS.map(p => {
+            const activeClass = (S.isSolid && S.customColor1 === p.color) ? ' active' : '';
+            return `<div class="solid-preset${activeClass}" style="background:${p.color}" title="${p.label}" data-color="${p.color}"></div>`;
+        }).join('');
+    }
+
+    el.solidPresets.addEventListener('click', e => {
+        const preset = e.target.closest('.solid-preset');
+        if (!preset) return;
+        const color = preset.dataset.color;
+        S.customColor1 = color;
+        S.isSolid = true;
+        el.customColor1.value = color;
+        el.solidCb.checked = true;
+        S.currentTemplate = 'tmpl-custom';
+        renderTemplates();
+        renderStickers();
+        toast(`Warna solid ${color} dipilih`);
+    });
+
+    el.solidCb.addEventListener('change', () => {
+        S.isSolid = el.solidCb.checked;
+        if (S.isSolid) S.currentTemplate = 'tmpl-custom';
+        renderTemplates();
+        renderStickers();
+    });
+
     el.templatePreviews.addEventListener('click', e => {
         const dot = e.target.closest('.tmpl-dot');
         if (!dot) return;
-        S.currentTemplate = dot.dataset.tmpl;
+        const tmplId = dot.dataset.tmpl;
+        S.currentTemplate = tmplId;
+        if (tmplId !== 'tmpl-custom') S.isSolid = false;
+        el.solidCb.checked = S.isSolid;
         renderTemplates();
         renderStickers();
         toast('Template diubah ke ' + TEMPLATES.find(t => t.id === S.currentTemplate).label);
@@ -1220,9 +1267,11 @@ document.addEventListener('DOMContentLoaded', function() {
         renderStickers();
     }
     el.customColor1.addEventListener('input', handleCustomColorChange);
-    el.customColor2.addEventListener('input', handleCustomColorChange);
+    el.customColor2.addEventListener('input', () => {
+        if (S.isSolid) return;
+        handleCustomColorChange();
+    });
 
-    /* ── Font family ── */
     function getStickerFontFamily() {
         if (S.fontFamilyId === 'custom' && S.customFontName) {
             return `'${S.customFontName}', sans-serif`;
@@ -1326,27 +1375,25 @@ document.addEventListener('DOMContentLoaded', function() {
         toast('Font custom dihapus');
     });
 
-    /* ── CSS variables ── */
     function updateCssVars() {
         const root = document.documentElement.style;
         const w = S.stickerWidth * 10;
         const h = (S.isRound ? S.stickerWidth : S.stickerHeight) * 10;
-        root.setProperty('--sticker-width',        w + 'mm');
-        root.setProperty('--sticker-height',       h + 'mm');
+        root.setProperty('--sticker-width', w + 'mm');
+        root.setProperty('--sticker-height', h + 'mm');
         root.setProperty('--sticker-border-radius', S.isRound ? '50%' : '8px');
-        root.setProperty('--sticker-text-color',   S.textColor);
-        root.setProperty('--sticker-font-family',  getStickerFontFamily());
-        root.setProperty('--title-font-size',  S.font.title.size + 'em');
-        root.setProperty('--title-font-weight',S.font.title.bold  ? 'bold' : 'normal');
-        root.setProperty('--name-font-size',   S.font.name.size  + 'em');
-        root.setProperty('--name-font-weight', S.font.name.bold   ? 'bold' : 'normal');
-        root.setProperty('--comp-font-size',   S.font.comp.size  + 'em');
-        root.setProperty('--comp-font-weight', S.font.comp.bold   ? 'bold' : 'normal');
-        root.setProperty('--inst-font-size',   S.font.inst.size  + 'em');
-        root.setProperty('--inst-font-weight', S.font.inst.bold   ? 'bold' : 'normal');
+        root.setProperty('--sticker-text-color', S.textColor);
+        root.setProperty('--sticker-font-family', getStickerFontFamily());
+        root.setProperty('--title-font-size', S.font.title.size + 'em');
+        root.setProperty('--title-font-weight', S.font.title.bold ? 'bold' : 'normal');
+        root.setProperty('--name-font-size', S.font.name.size + 'em');
+        root.setProperty('--name-font-weight', S.font.name.bold ? 'bold' : 'normal');
+        root.setProperty('--comp-font-size', S.font.comp.size + 'em');
+        root.setProperty('--comp-font-weight', S.font.comp.bold ? 'bold' : 'normal');
+        root.setProperty('--inst-font-size', S.font.inst.size + 'em');
+        root.setProperty('--inst-font-weight', S.font.inst.bold ? 'bold' : 'normal');
     }
 
-    /* ── Build single sticker DOM ── */
     function buildSticker(p, forPrint = false) {
         const sticker = document.createElement('div');
         const useRoundImage = S.isRound && S.roundImage;
@@ -1389,7 +1436,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return sticker;
         }
 
-        // Gambar stiker bulat (dengan teks)
         if (useRoundImage) {
             const imgWrap = document.createElement('div');
             imgWrap.className = 'sticker-round-img-wrap';
@@ -1409,26 +1455,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (!S.hideText || !S.isRound) {
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 's-title';
-            titleDiv.textContent = `${S.stickerTitle} ${p.peringkat}`;
-            titleDiv.style.fontSize   = S.font.title.size + 'em';
-            titleDiv.style.fontWeight = S.font.title.bold ? 'bold' : 'normal';
-
-            const nameDiv = document.createElement('div');
-            nameDiv.className = 's-name';
-            nameDiv.textContent = p.nama;
-            nameDiv.style.fontSize   = S.font.name.size + 'em';
-            nameDiv.style.fontWeight = S.font.name.bold ? 'bold' : 'normal';
-
-            const compDiv = document.createElement('div');
-            compDiv.className = 's-comp';
-            compDiv.innerHTML = `<div>${p.lomba}</div><div>${p.kegiatan}</div>`;
-            compDiv.style.fontSize   = S.font.comp.size + 'em';
-            compDiv.style.fontWeight = S.font.comp.bold ? 'bold' : 'normal';
-
-            overlay.append(titleDiv, nameDiv, compDiv);
-
+            if (S.stickerTitle || p.peringkat) {
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 's-title';
+                const displayTitle = (S.stickerTitle ? S.stickerTitle + ' ' : '') + (p.peringkat || '');
+                titleDiv.textContent = displayTitle.trim();
+                titleDiv.style.fontSize   = S.font.title.size + 'em';
+                titleDiv.style.fontWeight = S.font.title.bold ? 'bold' : 'normal';
+                overlay.appendChild(titleDiv);
+            }
+            if (p.nama) {
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 's-name';
+                nameDiv.textContent = p.nama;
+                nameDiv.style.fontSize   = S.font.name.size + 'em';
+                nameDiv.style.fontWeight = S.font.name.bold ? 'bold' : 'normal';
+                overlay.appendChild(nameDiv);
+            }
+            if (p.lomba || p.kegiatan) {
+                const compDiv = document.createElement('div');
+                compDiv.className = 's-comp';
+                let compHtml = '';
+                if (p.lomba) compHtml += `<div>${p.lomba}</div>`;
+                if (p.kegiatan) compHtml += `<div>${p.kegiatan}</div>`;
+                compDiv.innerHTML = compHtml;
+                compDiv.style.fontSize   = S.font.comp.size + 'em';
+                compDiv.style.fontWeight = S.font.comp.bold ? 'bold' : 'normal';
+                overlay.appendChild(compDiv);
+            }
             if (S.instansi) {
                 const instDiv = document.createElement('div');
                 instDiv.className = 's-inst';
@@ -1443,7 +1497,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return sticker;
     }
 
-    /* ── Render preview ── */
     function renderStickers() {
         el.previewWrap.innerHTML = '';
         if (pesertaData.length === 0) {
@@ -1461,7 +1514,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePrintInfo();
     }
 
-    /* ── Table ── */
     function renderTable() {
         el.pesertaTableBody.innerHTML = '';
         if (pesertaData.length === 0) { el.noDataMessage.classList.remove('hidden'); return; }
@@ -1469,12 +1521,12 @@ document.addEventListener('DOMContentLoaded', function() {
         pesertaData.forEach(p => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="font-semibold text-slate-800">${escHtml(p.nama)}</td>
+                <td class="font-semibold text-slate-800">${escHtml(p.nama) || '<i class="text-slate-400">-</i>'}</td>
                 <td>
-                    <div class="text-slate-700">${escHtml(p.lomba)}</div>
-                    <div class="text-xs text-slate-400">${escHtml(p.kegiatan)}</div>
+                    <div class="text-slate-700">${escHtml(p.lomba) || '<span class="text-slate-400">-</span>'}</div>
+                    <div class="text-xs text-slate-400">${escHtml(p.kegiatan) || '<span class="text-slate-400">-</span>'}</div>
                 </td>
-                <td><span class="rank-badge">${escHtml(p.peringkat)}</span></td>
+                <td><span class="rank-badge">${escHtml(p.peringkat) || '-'}</span></td>
                 <td class="text-center">
                     <div style="display:inline-flex;gap:6px;">
                         <button onclick="window.appEdit(${p.id})" class="btn btn-secondary !p-1.5 !text-xs" title="Edit"><i class="fas fa-pen"></i></button>
@@ -1492,10 +1544,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.appEdit = function(id) {
         const p = pesertaData.find(x => x.id === id); if (!p) return;
         editId = id;
-        el.namaInput.value = p.nama;
-        el.lombaInput.value = p.lomba;
-        el.kegiatanInput.value = p.kegiatan;
-        el.peringkatInput.value = p.peringkat;
+        el.namaInput.value = p.nama || '';
+        el.lombaInput.value = p.lomba || '';
+        el.kegiatanInput.value = p.kegiatan || '';
+        el.peringkatInput.value = p.peringkat || '';
         el.addBtnText.textContent = 'Update';
         el.addPesertaBtn.style.background = '#D97706';
         el.addPesertaBtn.style.boxShadow = '0 2px 8px rgba(217,119,6,0.3)';
@@ -1527,10 +1579,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const lomba = el.lombaInput.value.trim();
         const kegiatan = el.kegiatanInput.value.trim();
         const peringkat = el.peringkatInput.value.trim();
-        if (!nama || !lomba || !kegiatan || !peringkat) {
-            showModal('Data Tidak Lengkap', 'Mohon isi semua kolom data peserta.', null, true);
-            return;
-        }
         if (editId) {
             const idx = pesertaData.findIndex(p => p.id === editId);
             if (idx > -1) pesertaData[idx] = { ...pesertaData[idx], nama, lomba, kegiatan, peringkat };
@@ -1544,7 +1592,6 @@ document.addEventListener('DOMContentLoaded', function() {
         el.namaInput.focus();
     }
 
-    /* ── Print ── */
     function computeLayout() {
         const wMm = S.stickerWidth * 10;
         const hMm = (S.isRound ? S.stickerWidth : S.stickerHeight) * 10;
@@ -1594,7 +1641,6 @@ document.addEventListener('DOMContentLoaded', function() {
             preparePrint);
     }
 
-    /* ── Sample data ── */
     function addSample() {
         pesertaData = [
             { id: nextId++, nama: 'Ahmad Fauzi',  lomba: 'Cerdas Cermat', kegiatan: 'Olimpiade Sains',   peringkat: '1' },
@@ -1625,7 +1671,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /* ── Font settings ── */
+    // ─── Excel Functions ───
+    function downloadTemplate() {
+        const wb = XLSX.utils.book_new();
+        const wsData = [
+            ['Nama', 'Jenis Lomba', 'Kegiatan', 'Peringkat'],
+            ['Ahmad Fauzi', 'Cerdas Cermat', 'Olimpiade Sains', '1'],
+            ['Budi Santoso', 'Matematika', 'Olimpiade Sains', '2'],
+            ['Citra Dewi', 'Menulis Esai', 'Festival Literasi', '1']
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, 'Template');
+        XLSX.writeFile(wb, 'template_import_stiker.xlsx');
+        toast('Template Excel diunduh');
+    }
+
+    function importXlsx(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const wb = XLSX.read(data, { type: 'array' });
+                const firstSheet = wb.SheetNames[0];
+                const worksheet = wb.Sheets[firstSheet];
+                const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                if (json.length === 0) {
+                    toast('File Excel kosong', 'error');
+                    return;
+                }
+                const headers = json[0].map(h => String(h).toLowerCase().trim());
+                const namaIdx = headers.indexOf('nama');
+                const lombaIdx = headers.indexOf('jenis lomba');
+                const kegiatanIdx = headers.indexOf('kegiatan');
+                const peringkatIdx = headers.indexOf('peringkat');
+                if (namaIdx === -1 && lombaIdx === -1 && kegiatanIdx === -1 && peringkatIdx === -1) {
+                    toast('Kolom tidak dikenali. Gunakan template yang benar.', 'error');
+                    return;
+                }
+                const imported = [];
+                for (let i = 1; i < json.length; i++) {
+                    const row = json[i];
+                    if (!row || row.every(cell => cell === undefined || cell === '')) continue;
+                    const nama = row[namaIdx]?.toString().trim() || '';
+                    const lomba = row[lombaIdx]?.toString().trim() || '';
+                    const kegiatan = row[kegiatanIdx]?.toString().trim() || '';
+                    const peringkat = row[peringkatIdx]?.toString().trim() || '';
+                    imported.push({ id: nextId++, nama, lomba, kegiatan, peringkat });
+                }
+                if (imported.length === 0) {
+                    toast('Tidak ada data valid di file.', 'error');
+                    return;
+                }
+                pesertaData = pesertaData.concat(imported);
+                updateAll();
+                toast(`${imported.length} data berhasil diimpor`);
+            } catch (err) {
+                toast('Gagal membaca file Excel', 'error');
+                console.error(err);
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function exportXlsx() {
+        if (pesertaData.length === 0) {
+            toast('Tidak ada data untuk diekspor', 'error');
+            return;
+        }
+        const wsData = [['Nama', 'Jenis Lomba', 'Kegiatan', 'Peringkat']];
+        pesertaData.forEach(p => {
+            wsData.push([p.nama || '', p.lomba || '', p.kegiatan || '', p.peringkat || '']);
+        });
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, 'Data Peserta');
+        XLSX.writeFile(wb, 'data_peserta_stiker.xlsx');
+        toast('Data berhasil diekspor');
+    }
+
+    // ─── Event Listeners ───
+    el.btnDownloadTemplate.addEventListener('click', downloadTemplate);
+    el.btnImportXlsx.addEventListener('click', () => el.importFileInput.click());
+    el.importFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        importXlsx(file);
+        el.importFileInput.value = ''; // reset
+    });
+    el.btnExportXlsx.addEventListener('click', exportXlsx);
+
     function readFontSettings() {
         S.font.title.size  = parseFloat(el.titleSize.value);
         S.font.title.bold  = el.titleBold.checked;
@@ -1637,7 +1771,6 @@ document.addEventListener('DOMContentLoaded', function() {
         S.font.inst.bold   = el.instansiBold.checked;
     }
 
-    /* ── Logo handling ── */
     el.logoFile.addEventListener('change', e => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
@@ -1662,7 +1795,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toast('Logo dihapus');
     });
 
-    /* ── Background handling ── */
     el.backgroundFile.addEventListener('change', e => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
@@ -1685,7 +1817,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toast('Background dihapus');
     });
 
-    /* ── Round sticker image ── */
     el.roundImageFile.addEventListener('change', e => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
@@ -1719,7 +1850,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    /* ── Wire up all inputs ── */
     function syncState() {
         S.stickerTitle = el.titleInput.value;
         S.instansi = el.instansiInput.value;
@@ -1764,10 +1894,8 @@ document.addEventListener('DOMContentLoaded', function() {
     el.btnAdd20.addEventListener('click', add20);
     el.btnResetAll.addEventListener('click', resetAll);
 
-    /* ── Master update ── */
     function updateAll() { renderTable(); renderStickers(); updateCssVars(); }
 
-    /* ── Init ── */
     initFontSelect();
     renderTemplates();
     updateCssVars();
