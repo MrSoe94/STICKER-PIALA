@@ -186,6 +186,12 @@
             margin-top: 8px;
             border: 1px solid var(--border);
         }
+        .solid-color-preview {
+            height: 36px;
+            border-radius: 10px;
+            margin-top: 4px;
+            border: 1px solid var(--border);
+        }
         .solid-preset {
             width: 28px;
             height: 28px;
@@ -778,28 +784,45 @@
                                     <div id="templatePreviews" class="flex flex-wrap gap-2"></div>
                                     <div id="customTemplateSection" class="mt-3">
                                         <label class="field-label">Template Custom</label>
-                                        <div class="image-options-grid">
-                                            <div class="color-picker-row">
-                                                <input type="color" id="customColor1" value="#4F46E5" title="Warna awal" />
-                                                <div class="min-w-0">
-                                                    <p class="text-xs font-semibold text-slate-700">Warna Awal</p>
-                                                    <p class="text-[0.65rem] text-slate-400" id="customColor1Val">#4F46E5</p>
-                                                </div>
-                                            </div>
-                                            <div class="color-picker-row">
-                                                <input type="color" id="customColor2" value="#7C3AED" title="Warna akhir" />
-                                                <div class="min-w-0">
-                                                    <p class="text-xs font-semibold text-slate-700">Warna Akhir</p>
-                                                    <p class="text-[0.65rem] text-slate-400" id="customColor2Val">#7C3AED</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-2 mt-2">
+                                        <div class="flex items-center gap-2 mb-3">
                                             <input type="checkbox" id="solidColorCheckbox" class="w-4 h-4 accent-indigo-600" />
-                                            <label for="solidColorCheckbox" class="text-xs font-semibold text-slate-700">Warna Solid (1 warna cerah)</label>
+                                            <label for="solidColorCheckbox" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">Mode Warna Solid</label>
                                         </div>
-                                        <div id="solidPresets" class="flex flex-wrap gap-2 mt-2"></div>
-                                        <div id="customGradientPreview" class="custom-gradient-preview"></div>
+                                        <div id="solidColorSection" class="hidden space-y-2 mb-3">
+                                            <label class="field-label">Warna Solid Custom</label>
+                                            <div class="color-picker-row">
+                                                <input type="color" id="solidCustomColor" value="#4F46E5" title="Pilih warna solid" />
+                                                <div class="min-w-0 flex-1">
+                                                    <p class="text-xs font-semibold text-slate-700">Pilih atau ketik kode hex</p>
+                                                    <input type="text" id="solidColorHex" value="#4F46E5" class="field-input !py-1.5 !text-xs mt-1 font-mono uppercase" placeholder="#FF5733" maxlength="7" spellcheck="false" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="field-label">Preset Warna Solid</label>
+                                                <div id="solidPresets" class="flex flex-wrap gap-2"></div>
+                                            </div>
+                                            <div id="solidColorPreview" class="solid-color-preview"></div>
+                                        </div>
+                                        <div id="gradientColorSection" class="space-y-2">
+                                            <label class="field-label">Gradient Custom</label>
+                                            <div class="image-options-grid">
+                                                <div class="color-picker-row">
+                                                    <input type="color" id="customColor1" value="#4F46E5" title="Warna awal" />
+                                                    <div class="min-w-0">
+                                                        <p class="text-xs font-semibold text-slate-700">Warna Awal</p>
+                                                        <p class="text-[0.65rem] text-slate-400" id="customColor1Val">#4F46E5</p>
+                                                    </div>
+                                                </div>
+                                                <div class="color-picker-row">
+                                                    <input type="color" id="customColor2" value="#7C3AED" title="Warna akhir" />
+                                                    <div class="min-w-0">
+                                                        <p class="text-xs font-semibold text-slate-700">Warna Akhir</p>
+                                                        <p class="text-[0.65rem] text-slate-400" id="customColor2Val">#7C3AED</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="customGradientPreview" class="custom-gradient-preview"></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -1327,6 +1350,11 @@ document.addEventListener('DOMContentLoaded', function() {
         customColor1Val:    $('customColor1Val'),
         customColor2Val:    $('customColor2Val'),
         solidCb:            $('solidColorCheckbox'),
+        solidColorSection:  $('solidColorSection'),
+        gradientColorSection: $('gradientColorSection'),
+        solidCustomColor:   $('solidCustomColor'),
+        solidColorHex:      $('solidColorHex'),
+        solidColorPreview:  $('solidColorPreview'),
         solidPresets:       $('solidPresets'),
         customGradientPreview: $('customGradientPreview'),
         textColor:          $('textColor'),
@@ -1460,6 +1488,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    function normalizeHexColor(val) {
+        if (!val) return null;
+        let v = val.trim();
+        if (!v.startsWith('#')) v = '#' + v;
+        if (/^#[0-9A-Fa-f]{6}$/.test(v)) return v.toUpperCase();
+        if (/^#[0-9A-Fa-f]{3}$/.test(v)) {
+            return ('#' + v[1] + v[1] + v[2] + v[2] + v[3] + v[3]).toUpperCase();
+        }
+        return null;
+    }
+
     function getCustomGradient() {
         if (S.isSolid) return S.customColor1;
         return `linear-gradient(135deg, ${S.customColor1}, ${S.customColor2})`;
@@ -1470,6 +1509,34 @@ document.addEventListener('DOMContentLoaded', function() {
         el.customGradientPreview.style.background = grad;
         el.customColor1Val.textContent = S.customColor1.toUpperCase();
         el.customColor2Val.textContent = S.customColor2.toUpperCase();
+        el.solidColorPreview.style.background = S.customColor1;
+        el.solidCustomColor.value = S.customColor1;
+        el.solidColorHex.value = S.customColor1.toUpperCase();
+    }
+
+    function updateSolidModeUI() {
+        el.solidColorSection.classList.toggle('hidden', !S.isSolid);
+        el.gradientColorSection.classList.toggle('hidden', S.isSolid);
+        el.solidCb.checked = S.isSolid;
+    }
+
+    function applySolidCustomColor(color, silent) {
+        const hex = normalizeHexColor(color);
+        if (!hex) {
+            if (!silent) toast('Kode warna tidak valid. Contoh: #FF5733', 'error');
+            el.solidColorHex.value = S.customColor1.toUpperCase();
+            return false;
+        }
+        S.customColor1 = hex;
+        S.isSolid = true;
+        S.currentTemplate = 'tmpl-custom';
+        el.customColor1.value = hex;
+        el.solidCb.checked = true;
+        updateSolidModeUI();
+        updateCustomPreview();
+        renderTemplates();
+        renderStickers();
+        return true;
     }
 
     function isSolidColorMode() {
@@ -1499,6 +1566,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join('');
         updateCustomPreview();
         renderSolidPresets();
+        updateSolidModeUI();
     }
 
     function renderSolidPresets() {
@@ -1527,15 +1595,9 @@ document.addEventListener('DOMContentLoaded', function() {
     el.solidPresets.addEventListener('click', e => {
         const preset = e.target.closest('.solid-preset');
         if (!preset) return;
-        const color = preset.dataset.color;
-        S.customColor1 = color;
-        S.isSolid = true;
-        el.customColor1.value = color;
-        el.solidCb.checked = true;
-        S.currentTemplate = 'tmpl-custom';
-        renderTemplates();
-        renderStickers();
-        toast(`Warna solid ${color} dipilih`);
+        if (applySolidCustomColor(preset.dataset.color)) {
+            toast('Warna solid ' + (preset.title || preset.dataset.color) + ' diterapkan');
+        }
     });
 
     el.textPresets.addEventListener('click', e => {
@@ -1551,9 +1613,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     el.solidCb.addEventListener('change', () => {
         S.isSolid = el.solidCb.checked;
-        if (S.isSolid) S.currentTemplate = 'tmpl-custom';
+        if (S.isSolid) {
+            S.currentTemplate = 'tmpl-custom';
+            updateCustomPreview();
+        }
+        updateSolidModeUI();
         renderTemplates();
         renderStickers();
+    });
+
+    el.solidCustomColor.addEventListener('input', () => {
+        applySolidCustomColor(el.solidCustomColor.value, true);
+    });
+
+    el.solidCustomColor.addEventListener('change', () => {
+        if (applySolidCustomColor(el.solidCustomColor.value)) {
+            toast('Warna solid custom diterapkan');
+        }
+    });
+
+    el.solidColorHex.addEventListener('input', () => {
+        el.solidColorHex.value = el.solidColorHex.value.toUpperCase();
+    });
+
+    el.solidColorHex.addEventListener('change', () => {
+        if (applySolidCustomColor(el.solidColorHex.value)) {
+            toast('Warna solid custom diterapkan');
+        }
+    });
+
+    el.solidColorHex.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (applySolidCustomColor(el.solidColorHex.value)) {
+                toast('Warna solid custom diterapkan');
+            }
+        }
     });
 
     el.borderEnabled.addEventListener('change', () => {
@@ -1665,7 +1760,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const tmplId = dot.dataset.tmpl;
         S.currentTemplate = tmplId;
         if (tmplId !== 'tmpl-custom') S.isSolid = false;
-        el.solidCb.checked = S.isSolid;
+        updateSolidModeUI();
         renderTemplates();
         renderStickers();
         toast('Template diubah ke ' + TEMPLATES.find(t => t.id === S.currentTemplate).label);
@@ -1675,14 +1770,13 @@ document.addEventListener('DOMContentLoaded', function() {
         S.customColor1 = el.customColor1.value;
         S.customColor2 = el.customColor2.value;
         S.currentTemplate = 'tmpl-custom';
+        S.isSolid = false;
+        updateSolidModeUI();
         renderTemplates();
         renderStickers();
     }
     el.customColor1.addEventListener('input', handleCustomColorChange);
-    el.customColor2.addEventListener('input', () => {
-        if (S.isSolid) return;
-        handleCustomColorChange();
-    });
+    el.customColor2.addEventListener('input', handleCustomColorChange);
 
     function getStickerFontFamily() {
         if (S.fontFamilyId === 'custom' && S.customFontName) {
